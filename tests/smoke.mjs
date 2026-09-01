@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+const required=['index.html','styles.css','auth-gate.js','ui-fixes.js','cloud-evolution.js','manifest.webmanifest','sw.js','app-1.js','app-2.js','app-3.js','app-4.js','app-5.js','app-6.js','api/config.js'];
+const missing=required.filter(f=>!fs.existsSync(f));
+if(missing.length)throw new Error('File mancanti: '+missing.join(', '));
+const index=fs.readFileSync('index.html','utf8');
+for(const ref of ['manifest.webmanifest','auth-gate.js','ui-fixes.js','cloud-evolution.js'])if(!index.includes(ref))throw new Error('index.html non collega '+ref);
+const auth=fs.readFileSync('auth-gate.js','utf8');
+if(!auth.includes('/api/config'))throw new Error('Runtime Supabase config non attiva');
+if(!auth.includes('ptpro10_session'))throw new Error('Gestione sessione mancante');
+const evolution=fs.readFileSync('cloud-evolution.js','utf8');
+for(const feature of ['serviceWorker','beforeinstallprompt','ptproSearchInput','weekly_checkins'])if(!evolution.includes(feature))throw new Error('Evolution feature mancante: '+feature);
+const ui=fs.readFileSync('ui-fixes.js','utf8');
+if(!ui.includes('UUID'))throw new Error('Protezione UUID non presente');
+console.log('PT-PRO smoke test OK');

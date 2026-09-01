@@ -1,0 +1,21 @@
+{
+  "name": "PT-PRO 10 Cloud",
+  "short_name": "PT-PRO",
+  "description": "Allenamento, Smart Coach, progressi e nutrizione in cloud.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090d14",
+  "theme_color": "#090d14",
+  "lang": "it-IT",
+  "orientation": "portrait-primary",
+  "categories": ["health", "fitness", "productivity"],
+  "icons": [
+    {
+      "src": "/ptpro-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

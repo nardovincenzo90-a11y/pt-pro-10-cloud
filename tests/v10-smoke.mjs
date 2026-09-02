@@ -10,7 +10,7 @@ if(!manifest.includes('11.0.0-WELLNESS-SPORT'))throw new Error('PT-PRO 11 releas
 const kernel=fs.readFileSync('v10/kernel.js','utf8');
 for(const token of ["['wellness','✨','Attività & Sport']","['onboarding','◎','Il mio percorso']","['admin-users','♛','Utenti & Attività']","['guide','?','Guida & Tutorial']"])if(!kernel.includes(token))throw new Error(`Navigation missing ${token}`);
 const auth=fs.readFileSync('auth-gate.js','utf8');
-for(const token of ['Registrati','Password dimenticata','signUp','invite'])if(!auth.includes(token))throw new Error(`Auth missing ${token}`);
+for(const token of ['Registrati','Recupera password','renderSignup','renderRecovery','redeemPendingInvite','/auth/v1/signup','/auth/v1/recover'])if(!auth.includes(token))throw new Error(`Auth missing ${token}`);
 const wellness=fs.readFileSync('v10/wellness.js','utf8');
 for(const token of ["A.register('wellness'","A.register('onboarding'","A.register('wellness-program'","A.register('admin-users'",'Genera programma personalizzato','registration_invites','activities'])if(!wellness.includes(token))throw new Error(`Wellness missing ${token}`);
 const we=fs.readFileSync('v10/wellness-engine.js','utf8');

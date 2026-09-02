@@ -5,6 +5,7 @@ const uid=()=>state.boot.uid;
 const defaults={accent:'#635bff',fontScale:100,density:'comfortable',rounded:true,shadows:true,animations:true};
 async function getPrefs(){const r=await api.get('user_preferences',{select:'*',athlete_id:`eq.${uid()}`,limit:1}).catch(()=>[]);return r[0]||null}
 function normalizeSettings(v){const s={...defaults,...(v||{})};s.fontScale=Math.min(120,Math.max(85,Number(s.fontScale)||100));if(!['compact','comfortable','relaxed'].includes(s.density))s.density='comfortable';return s}
+function readCached(){try{return JSON.parse(localStorage.getItem('ptpro-appearance')||'null')}catch{return null}}
 function resolveTheme(mode){if(mode==='auto')return window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light';return mode==='dark'?'dark':'light'}
 function apply(theme='auto',settings={}){const s=normalizeSettings(settings),root=document.documentElement,resolved=resolveTheme(theme);root.dataset.theme=resolved;root.dataset.themeMode=theme;root.dataset.density=s.density;root.dataset.rounded=s.rounded?'on':'off';root.dataset.shadows=s.shadows?'on':'off';root.dataset.animations=s.animations?'on':'off';root.style.setProperty('--accent',s.accent);root.style.setProperty('--ui-scale',String(s.fontScale/100));document.querySelector('meta[name="theme-color"]')?.setAttribute('content',resolved==='dark'?'#0b1020':'#f5f7fb');try{localStorage.setItem('ptpro-appearance',JSON.stringify({theme,settings:s}))}catch{}return s}
 async function persist(theme,settings){try{const p=await getPrefs(),payload={theme_mode:theme,app_settings:normalizeSettings(settings)};if(p)await api.patch('user_preferences',{athlete_id:`eq.${uid()}`},payload);else await api.post('user_preferences',{athlete_id:uid(),...payload})}catch(e){console.error('appearance persistence',e);toast('Aspetto applicato. Il salvataggio Cloud verrà ritentato.','err')}}
@@ -13,7 +14,7 @@ function render(theme,settings){const accents=['#635bff','#7c3aed','#e11d8d','#e
 function markTheme(theme){document.querySelectorAll('[data-theme-mode]').forEach(b=>{const on=b.dataset.themeMode===theme;b.classList.toggle('selected',on);const old=b.querySelector('.themeCheck');if(on&&!old){const i=document.createElement('i');i.className='themeCheck';i.textContent='✓';b.firstElementChild?.appendChild(i)}else if(!on&&old)old.remove()})}
 function markAccent(accent){document.querySelectorAll('[data-accent]').forEach(b=>{const on=b.dataset.accent.toLowerCase()===accent.toLowerCase();b.classList.toggle('active',on);b.textContent=on?'✓':''})}
 function markDensity(density){document.querySelectorAll('[data-density]').forEach(b=>b.classList.toggle('active',b.dataset.density===density))}
-A.register('appearance',async()=>{state.view='appearance';const p=await getPrefs(),cached=(()=>{try{return JSON.parse(localStorage.getItem('ptpro-appearance')||'null')}catch{return null}})(),theme=p?.theme_mode||cached?.theme||'auto';let settings=normalizeSettings(p?.app_settings||cached?.settings);let themeState=theme;apply(themeState,settings);render(themeState,settings);
+A.register('appearance',()=>{state.view='appearance';const cached=readCached(),theme=cached?.theme||'auto';let settings=normalizeSettings(cached?.settings);let themeState=theme;settings=apply(themeState,settings);render(themeState,settings);
 document.querySelectorAll('[data-theme-mode]').forEach(b=>b.onclick=()=>{themeState=b.dataset.themeMode;settings=apply(themeState,settings);markTheme(themeState);void persist(themeState,settings)});
 document.querySelectorAll('[data-accent]').forEach(b=>b.onclick=()=>{settings.accent=b.dataset.accent;settings=apply(themeState,settings);markAccent(settings.accent);void persist(themeState,settings)});
 document.querySelectorAll('[data-font]').forEach(b=>b.onclick=()=>{settings.fontScale=Math.min(120,Math.max(85,settings.fontScale+Number(b.dataset.font)));settings=apply(themeState,settings);const v=document.getElementById('fontValue');if(v)v.textContent=settings.fontScale+'%';void persist(themeState,settings)});
@@ -21,6 +22,6 @@ document.querySelectorAll('[data-density]').forEach(b=>b.onclick=()=>{settings.d
 document.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{const k=b.dataset.toggle;settings[k]=!settings[k];settings=apply(themeState,settings);b.classList.toggle('on',settings[k]);b.setAttribute('aria-pressed',settings[k]?'true':'false');void persist(themeState,settings)});
 });
 window.PTPROAppearance={apply};
-try{const raw=JSON.parse(localStorage.getItem('ptpro-appearance')||'null');if(raw)apply(raw.theme||'auto',raw.settings||{})}catch{}
-if(window.matchMedia){const mq=window.matchMedia('(prefers-color-scheme: dark)');const sync=()=>{try{const raw=JSON.parse(localStorage.getItem('ptpro-appearance')||'null');if(raw?.theme==='auto')apply('auto',raw.settings||{})}catch{}};mq.addEventListener?.('change',sync)}
+const initial=readCached();if(initial)apply(initial.theme||'auto',initial.settings||{});
+if(window.matchMedia){const mq=window.matchMedia('(prefers-color-scheme: dark)');const sync=()=>{const raw=readCached();if(raw?.theme==='auto')apply('auto',raw.settings||{})};mq.addEventListener?.('change',sync)}
 })();

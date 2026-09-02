@@ -30,5 +30,5 @@
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.2.1-PRO-NUTRITION-ADMIN';
+  window.PTPRO_APP_VERSION='11.2.2-PRO-NUTRITION-FOODS';
 })();

@@ -1,13 +1,18 @@
 import fs from 'node:fs';
-const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/final-runtime.js','v10/bootstrap.js','v10/styles.css','v10/features.css','v10/pro.css','v10/layout.css'];
+const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/support.js','v10/final-runtime.js','v10/bootstrap.js','v10/styles.css','v10/features.css','v10/pro.css','v10/layout.css'];
 for(const f of need){if(!fs.existsSync(f))throw new Error(`Missing ${f}`)}
 const index=fs.readFileSync('index.html','utf8');
 for(const css of ['/v10/styles.css','/v10/features.css','/v10/pro.css','/v10/layout.css'])if(!index.includes(css))throw new Error(`Missing style ${css}`);
+if(!index.includes('10.1.1-pro-support'))throw new Error('Support cache release missing');
 if(/app-[1-6]\.js|media-evolution|cloud-evolution|ux-unifier/.test(index))throw new Error('Legacy runtime still referenced by index');
 const manifest=fs.readFileSync('app-manifest.js','utf8');
-for(const f of ['v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/final-runtime.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
-if(!manifest.includes('10.1.0-PRO-COMPLETE'))throw new Error('PRO Complete release missing');
+for(const f of ['v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/support.js','v10/final-runtime.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
+if(!manifest.includes('10.1.1-PRO-SUPPORT'))throw new Error('PRO Support release missing');
 if(/app-[1-6]\.js|v10\/app\.js/.test(manifest))throw new Error('Legacy or monolithic runtime still active');
+const kernel=fs.readFileSync('v10/kernel.js','utf8');
+for(const token of ["['guide','?','Guida & Tutorial']","['whats-new','✦','Novità']","['contact','✉','Contattaci']"])if(!kernel.includes(token))throw new Error(`Support sidebar route missing ${token}`);
+const support=fs.readFileSync('v10/support.js','utf8');
+for(const token of ["A.register('guide'","A.register('whats-new'","A.register('contact'",'Guida & Tutorial','Installazione su smartphone','PT-PRO 10.1 · PRO Complete','Invia segnalazione',"api.techLog(state.boot.uid,'info','support'"])if(!support.includes(token))throw new Error(`Support center missing ${token}`);
 const appearance=fs.readFileSync('v10/appearance-pro.js','utf8');
 for(const token of ['theme_mode','app_settings','Colore principale','Dimensione testo','Densità interfaccia','Angoli arrotondati','Ombre morbide','Animazioni fluide','readCached'])if(!appearance.includes(token))throw new Error(`Appearance missing ${token}`);
 if(appearance.includes("A.register('appearance',async"))throw new Error('Appearance still blocks navigation on Cloud');
@@ -29,4 +34,4 @@ const manager=fs.readFileSync('v10/admin-pro.js','utf8');
 for(const token of ['Gestione Dati PRO','Esercizi','Integratori','Piani nutrizionali'])if(!manager.includes(token))throw new Error(`Data manager missing ${token}`);
 const runtime=fs.readFileSync('v10/final-runtime.js','utf8');
 for(const token of ['syncWorkoutCalendar','createSmartNotifications','system-health','originalFinish','originalBootstrap'])if(!runtime.includes(token))throw new Error(`Final runtime missing ${token}`);
-console.log('PT-PRO 10 Cloud PRO COMPLETE smoke: OK');
+console.log('PT-PRO 10.1 Support Center smoke: OK');

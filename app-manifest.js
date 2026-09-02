@@ -16,5 +16,5 @@
     {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='10.0.3-PRO-UI-FIX';
+  window.PTPRO_APP_VERSION='10.0.4-PRO-UI-STABLE';
 })();

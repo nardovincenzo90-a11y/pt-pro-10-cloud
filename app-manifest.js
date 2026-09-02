@@ -5,9 +5,11 @@
     {id:'v10-nutrition-engine',src:'v10/nutrition-engine.js',domain:'nutrition-engine'},
     {id:'v10-kernel',src:'v10/kernel.js',domain:'core'},
     {id:'v11-wellness-engine',src:'v10/wellness-engine.js',domain:'wellness-engine'},
+    {id:'v11-sport-library',src:'v10/sport-library.js',domain:'sport-library'},
     {id:'v11-wellness',src:'v10/wellness.js',domain:'wellness'},
     {id:'v11-wellness-runtime',src:'v10/wellness-runtime.js',domain:'wellness-runtime'},
     {id:'v11-admin-runtime',src:'v10/admin-runtime.js',domain:'admin-runtime'},
+    {id:'v11-school',src:'v10/school.js',domain:'school'},
     {id:'v10-home',src:'v10/home.js',domain:'home'},
     {id:'v10-workout',src:'v10/workout.js',domain:'workout'},
     {id:'v10-progress',src:'v10/progress.js',domain:'progress'},
@@ -22,5 +24,5 @@
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.0.0-WELLNESS-SPORT';
+  window.PTPRO_APP_VERSION='11.1.0-WELLNESS-SCHOOL';
 })();

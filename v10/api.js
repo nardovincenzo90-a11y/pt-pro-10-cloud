@@ -1,87 +1,28 @@
 (() => {
 'use strict';
-const CFG='ptpro10_supabase_config', SES='ptpro10_session';
+const CFG='ptpro10_supabase_config',SES='ptpro10_session';
 const config=()=>{try{return JSON.parse(localStorage.getItem(CFG)||'null')}catch{return null}};
 const session=()=>{try{return JSON.parse(localStorage.getItem(SES)||'null')}catch{return null}};
-async function request(path,{method='GET',body,headers={}}={}){
-  const c=config(),s=session();
-  if(!c?.url||!c?.key)throw new Error('Configurazione Supabase mancante');
-  if(!s?.access_token)throw new Error('Sessione scaduta');
-  const r=await fetch(c.url+path,{method,headers:{apikey:c.key,Authorization:`Bearer ${s.access_token}`,Accept:'application/json','Content-Type':'application/json',...headers},body:body===undefined?undefined:JSON.stringify(body)});
-  const text=await r.text();let data=null;try{data=text?JSON.parse(text):null}catch{data=text}
-  if(!r.ok)throw new Error(data?.message||data?.hint||data?.error_description||`Errore ${r.status}`);
-  return data;
-}
+async function request(path,{method='GET',body,headers={},raw=false}={}){const c=config(),s=session();if(!c?.url||!c?.key)throw Error('Configurazione Supabase mancante');if(!s?.access_token)throw Error('Sessione scaduta');const h={apikey:c.key,Authorization:`Bearer ${s.access_token}`,Accept:'application/json',...headers};if(body!==undefined&&!raw)h['Content-Type']='application/json';const r=await fetch(c.url+path,{method,headers:h,body:body===undefined?undefined:(raw?body:JSON.stringify(body))});const text=await r.text();let data=null;try{data=text?JSON.parse(text):null}catch{data=text}if(!r.ok)throw Error(data?.message||data?.hint||data?.error_description||data?.error||`Errore ${r.status}`);return data}
 const qs=o=>{const q=new URLSearchParams();Object.entries(o||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});return q.toString()};
-const get=(table,params={})=>request(`/rest/v1/${table}?${qs(params)}`);
-const post=(table,body)=>request(`/rest/v1/${table}`,{method:'POST',body,headers:{Prefer:'return=representation'}});
-const patch=(table,filter,body)=>request(`/rest/v1/${table}?${qs(filter)}`,{method:'PATCH',body,headers:{Prefer:'return=representation'}});
-const del=(table,filter)=>request(`/rest/v1/${table}?${qs(filter)}`,{method:'DELETE',headers:{Prefer:'return=representation'}});
+const get=(t,p={})=>request(`/rest/v1/${t}?${qs(p)}`),post=(t,b)=>request(`/rest/v1/${t}`,{method:'POST',body:b,headers:{Prefer:'return=representation'}}),patch=(t,f,b)=>request(`/rest/v1/${t}?${qs(f)}`,{method:'PATCH',body:b,headers:{Prefer:'return=representation'}}),del=(t,f)=>request(`/rest/v1/${t}?${qs(f)}`,{method:'DELETE',headers:{Prefer:'return=representation'}});
 async function user(){return request('/auth/v1/user')}
-async function bootstrap(){
-  const u=await user(),uid=u.id;
-  const [profiles,plans,measures,sessions,checkins,goals,notifications,events]=await Promise.all([
-    get('profiles',{select:'*',id:`eq.${uid}`,limit:1}),
-    get('workout_plans',{select:'*',athlete_id:`eq.${uid}`,archived_at:'is.null',order:'active.desc,created_at.desc'}),
-    get('measurements',{select:'*',athlete_id:`eq.${uid}`,order:'measured_on.desc',limit:30}),
-    get('workout_sessions',{select:'*',athlete_id:`eq.${uid}`,order:'started_at.desc',limit:60}),
-    get('weekly_checkins',{select:'*',athlete_id:`eq.${uid}`,order:'checkin_date.desc',limit:12}).catch(()=>[]),
-    get('goals',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:30}).catch(()=>[]),
-    get('notifications',{select:'*',athlete_id:`eq.${uid}`,archived_at:'is.null',order:'created_at.desc',limit:20}).catch(()=>[]),
-    get('calendar_events',{select:'*',athlete_id:`eq.${uid}`,order:'starts_at.asc',limit:40}).catch(()=>[])
-  ]);
-  const plan=plans.find(x=>x.active)||plans[0]||null;
-  const days=plan?await get('workout_days',{select:'*',plan_id:`eq.${plan.id}`,archived_at:'is.null',order:'sort_order.asc'}):[];
-  return {uid,user:u,profile:profiles[0]||{},plan,plans,days,measures,sessions,checkins,goals,notifications,events};
-}
-async function workout(dayId){
-  const [days,items]=await Promise.all([get('workout_days',{select:'*',id:`eq.${dayId}`,limit:1}),get('workout_items',{select:'*',day_id:`eq.${dayId}`,archived_at:'is.null',order:'sort_order.asc'})]);
-  const day=days[0];if(!day)throw new Error('Giorno non trovato');
-  const ids=[...new Set(items.map(x=>x.exercise_id).filter(Boolean))];
-  const exercises=ids.length?await get('exercises',{select:'*',id:`in.(${ids.join(',')})`}):[];
-  const notes=ids.length?await get('exercise_notes',{select:'*',athlete_id:`eq.${day.athlete_id}`,exercise_id:`in.(${ids.join(',')})`}).catch(()=>[]):[];
-  const map=new Map(exercises.map(e=>[e.id,e])), noteMap=new Map(notes.map(n=>[n.exercise_id,n]));
-  return {day,items:items.map(item=>({...item,exercise:map.get(item.exercise_id)||null,exercise_note:noteMap.get(item.exercise_id)||null}))};
-}
-async function exerciseCatalog(){return get('exercises',{select:'*',active:'eq.true',order:'name.asc'})}
-async function previousSets(uid,exerciseId){return get('workout_sets',{select:'*',athlete_id:`eq.${uid}`,exercise_id:`eq.${exerciseId}`,order:'logged_at.desc',limit:20})}
+async function bootstrap(){const u=await user(),uid=u.id;const [profiles,plans,measures,sessions,checkins,goals,events,notifications]=await Promise.all([get('profiles',{select:'*',id:`eq.${uid}`,limit:1}),get('workout_plans',{select:'*',athlete_id:`eq.${uid}`,archived_at:'is.null',order:'active.desc,created_at.desc'}),get('measurements',{select:'*',athlete_id:`eq.${uid}`,order:'measured_on.desc',limit:30}),get('workout_sessions',{select:'*',athlete_id:`eq.${uid}`,order:'started_at.desc',limit:80}),get('weekly_checkins',{select:'*',athlete_id:`eq.${uid}`,order:'checkin_date.desc',limit:12}).catch(()=>[]),get('goals',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:30}).catch(()=>[]),get('calendar_events',{select:'*',athlete_id:`eq.${uid}`,order:'starts_at.asc',limit:50}).catch(()=>[]),get('notifications',{select:'*',athlete_id:`eq.${uid}`,archived_at:'is.null',order:'created_at.desc',limit:50}).catch(()=>[])]);const plan=plans.find(x=>x.active)||plans[0]||null;const days=plan?await get('workout_days',{select:'*',plan_id:`eq.${plan.id}`,archived_at:'is.null',order:'sort_order.asc'}):[];return {uid,user:u,profile:profiles[0]||{},plan,plans,days,measures,sessions,checkins,goals,events,notifications}}
+async function workout(dayId){const [days,items]=await Promise.all([get('workout_days',{select:'*',id:`eq.${dayId}`,limit:1}),get('workout_items',{select:'*',day_id:`eq.${dayId}`,archived_at:'is.null',order:'sort_order.asc'})]);const day=days[0];if(!day)throw Error('Giorno non trovato');const ids=[...new Set(items.map(x=>x.exercise_id).filter(Boolean))];const exercises=ids.length?await get('exercises',{select:'id,legacy_id,name,muscle_group,equipment,description,technique,image_url,video_url,tags',id:`in.(${ids.join(',')})`}):[];const notes=ids.length?await get('exercise_notes',{select:'*',athlete_id:`eq.${day.athlete_id}`,exercise_id:`in.(${ids.join(',')})`}).catch(()=>[]):[];const em=new Map(exercises.map(e=>[e.id,e])),nm=new Map(notes.map(n=>[n.exercise_id,n]));return {day,items:items.map(i=>({...i,exercise:em.get(i.exercise_id)||null,exercise_note:nm.get(i.exercise_id)||null}))}}
+async function exerciseCatalog(){return get('exercises',{select:'id,legacy_id,name,muscle_group,equipment,description,technique,image_url,video_url,tags,active',active:'eq.true',order:'name.asc'})}
+async function previousSets(uid,exerciseId,limit=30){return get('workout_sets',{select:'*',athlete_id:`eq.${uid}`,exercise_id:`eq.${exerciseId}`,order:'logged_at.desc',limit})}
 async function startSession(uid,planId,dayId,count,readiness){const r=await post('workout_sessions',{athlete_id:uid,plan_id:planId||null,day_id:dayId,planned_exercises:count||0,readiness_score:readiness??null});return r?.[0]}
 async function saveSet(payload){const r=await post('workout_sets',payload);return r?.[0]}
 async function finishSession(id,payload){const r=await patch('workout_sessions',{id:`eq.${id}`},payload);return r?.[0]}
-async function saveExerciseNote(uid,exerciseId,data){const old=await get('exercise_notes',{select:'id',athlete_id:`eq.${uid}`,exercise_id:`eq.${exerciseId}`,limit:1});if(old[0])return (await patch('exercise_notes',{id:`eq.${old[0].id}`},data))[0];return (await post('exercise_notes',{athlete_id:uid,exercise_id:exerciseId,...data}))[0]}
-async function substitutes(uid,exerciseId){return get('exercise_substitutions',{select:'*',athlete_id:`eq.${uid}`,from_exercise_id:`eq.${exerciseId}`,order:'created_at.desc',limit:12}).catch(()=>[])}
-async function saveSubstitution(data){return (await post('exercise_substitutions',data))[0]}
-async function measurements(uid){return get('measurements',{select:'*',athlete_id:`eq.${uid}`,order:'measured_on.desc',limit:100})}
-async function addMeasurement(data){return (await post('measurements',data))[0]}
-async function saveCheckin(uid,data){const old=await get('weekly_checkins',{select:'id',athlete_id:`eq.${uid}`,checkin_date:`eq.${data.checkin_date}`,limit:1});if(old[0])return (await patch('weekly_checkins',{id:`eq.${old[0].id}`},data))[0];return (await post('weekly_checkins',{athlete_id:uid,...data}))[0]}
-async function addGoal(data){return (await post('goals',data))[0]}
-async function updateGoal(id,data){return (await patch('goals',{id:`eq.${id}`},data))[0]}
-async function progressData(uid){const [m,g,c,p,prs,vol]=await Promise.all([measurements(uid),get('goals',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc'}).catch(()=>[]),get('weekly_checkins',{select:'*',athlete_id:`eq.${uid}`,order:'checkin_date.desc',limit:30}).catch(()=>[]),get('progress_photos',{select:'*',athlete_id:`eq.${uid}`,order:'photo_date.desc',limit:50}).catch(()=>[]),get('v_exercise_prs',{select:'*',athlete_id:`eq.${uid}`,limit:100}).catch(()=>[]),get('v_weekly_training_volume',{select:'*',athlete_id:`eq.${uid}`,order:'week_start.desc',limit:20}).catch(()=>[])]);return {measurements:m,goals:g,checkins:c,photos:p,prs,volume:vol}}
-async function nutrition(uid){
- const [plans,days,recipes,pantry,lists,supp,foods]=await Promise.all([
-  get('nutrition_plans',{select:'*',athlete_id:`eq.${uid}`,order:'active.desc,created_at.desc'}).catch(()=>[]),
-  get('nutrition_days',{select:'*',athlete_id:`eq.${uid}`,order:'day_date.desc',limit:30}).catch(()=>[]),
-  get('recipes',{select:'*',limit:250}).catch(()=>[]),get('pantry_stock',{select:'*',athlete_id:`eq.${uid}`,limit:250}).catch(()=>[]),
-  get('shopping_lists',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:20}).catch(()=>[]),get('supplements',{select:'*',active:'eq.true',limit:100}).catch(()=>[]),
-  get('foods',{select:'*',limit:300}).catch(()=>[])
- ]);return {plans,days,recipes,pantry,lists,supp,foods};
-}
-async function nutritionDay(uid,date){const days=await get('nutrition_days',{select:'*',athlete_id:`eq.${uid}`,day_date:`eq.${date}`,limit:1});const day=days[0];if(!day)return {day:null,meals:[]};const meals=await get('meals',{select:'*',nutrition_day_id:`eq.${day.id}`,order:'sort_order.asc'});const ids=meals.map(x=>x.id);const items=ids.length?await get('meal_items',{select:'*',meal_id:`in.(${ids.join(',')})`}):[];return {day,meals:meals.map(m=>({...m,items:items.filter(i=>i.meal_id===m.id)}))}}
-async function createNutritionDay(data){return (await post('nutrition_days',data))[0]}
-async function addMeal(data){return (await post('meals',data))[0]}
-async function addMealItem(data){return (await post('meal_items',data))[0]}
+async function saveExerciseNote(uid,exerciseId,note){const old=await get('exercise_notes',{select:'id',athlete_id:`eq.${uid}`,exercise_id:`eq.${exerciseId}`,limit:1});return old.length?patch('exercise_notes',{id:`eq.${old[0].id}`},note):post('exercise_notes',{athlete_id:uid,exercise_id:exerciseId,note})}
+async function substitute(uid,sessionId,itemId,fromId,toId,reason=''){return post('exercise_substitutions',{athlete_id:uid,session_id:sessionId||null,workout_item_id:itemId,from_exercise_id:fromId,to_exercise_id:toId,reason,apply_to_plan:false})}
+async function progress(uid){const [measures,goals,checkins,photos,prs,volumes]=await Promise.all([get('measurements',{select:'*',athlete_id:`eq.${uid}`,order:'measured_on.desc',limit:60}),get('goals',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:50}),get('weekly_checkins',{select:'*',athlete_id:`eq.${uid}`,order:'checkin_date.desc',limit:20}),get('progress_photos',{select:'*',athlete_id:`eq.${uid}`,order:'photo_date.desc',limit:50}).catch(()=>[]),get('v_exercise_prs',{select:'*',athlete_id:`eq.${uid}`,limit:100}).catch(()=>[]),get('v_weekly_training_volume',{select:'*',athlete_id:`eq.${uid}`,order:'week_start.desc',limit:20}).catch(()=>[])]);return {measures,goals,checkins,photos,prs,volumes}}
+async function nutrition(uid){const [plans,days,recipes,pantry,lists,supp,logs]=await Promise.all([get('nutrition_plans',{select:'*',athlete_id:`eq.${uid}`,order:'active.desc,created_at.desc'}).catch(()=>[]),get('nutrition_days',{select:'*',athlete_id:`eq.${uid}`,order:'day_date.desc',limit:31}).catch(()=>[]),get('recipes',{select:'*',limit:250}).catch(()=>[]),get('pantry_stock',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:250}).catch(()=>[]),get('shopping_lists',{select:'*',athlete_id:`eq.${uid}`,order:'created_at.desc',limit:40}).catch(()=>[]),get('supplements',{select:'*',order:'name.asc',limit:100}).catch(()=>[]),get('supplement_logs',{select:'*',athlete_id:`eq.${uid}`,order:'logged_at.desc',limit:100}).catch(()=>[])]);return {plans,days,recipes,pantry,lists,supp,logs}}
+async function nutritionDay(uid,date){const ds=await get('nutrition_days',{select:'*',athlete_id:`eq.${uid}`,day_date:`eq.${date}`,limit:1});if(!ds.length)return {day:null,meals:[]};const day=ds[0],meals=await get('meals',{select:'*',nutrition_day_id:`eq.${day.id}`,order:'sort_order.asc'});for(const m of meals)m.items=await get('meal_items',{select:'*',meal_id:`eq.${m.id}`,order:'created_at.asc'});return {day,meals}}
+async function createNutritionDay(uid,plan,date,dayType='AUTO'){const old=await get('nutrition_days',{select:'id',athlete_id:`eq.${uid}`,day_date:`eq.${date}`,limit:1});if(old.length)await del('nutrition_days',{id:`eq.${old[0].id}`});const d=(await post('nutrition_days',{athlete_id:uid,plan_id:plan?.id||null,day_date:date,day_type:dayType,kcal:plan?.kcal_target||0,protein_g:plan?.protein_g_target||0,carbs_g:plan?.carbs_g_target||0,fat_g:plan?.fat_g_target||0,advice:'Giornata generata da PT-PRO Cloud'}))[0];const mealNames=['Colazione','Pranzo','Spuntino','Cena'];const ratios=[.25,.35,.15,.25];for(let i=0;i<mealNames.length;i++)await post('meals',{athlete_id:uid,nutrition_day_id:d.id,nutrition_plan_id:plan?.id||null,name:mealNames[i],sort_order:i+1,kcal:Number(d.kcal||0)*ratios[i],protein_g:Number(d.protein_g||0)*ratios[i],carbs_g:Number(d.carbs_g||0)*ratios[i],fat_g:Number(d.fat_g||0)*ratios[i]});return d}
 async function calendar(uid){return get('calendar_events',{select:'*',athlete_id:`eq.${uid}`,order:'starts_at.asc',limit:100})}
-async function addCalendarEvent(data){return (await post('calendar_events',data))[0]}
-async function removeCalendarEvent(id){return del('calendar_events',{id:`eq.${id}`})}
-async function notifications(uid){return get('notifications',{select:'*',athlete_id:`eq.${uid}`,archived_at:'is.null',order:'created_at.desc',limit:100})}
-async function markNotification(id){return (await patch('notifications',{id:`eq.${id}`},{read_at:new Date().toISOString()}))[0]}
-async function coach(uid){
- const links=await get('coach_athletes',{select:'*',coach_id:`eq.${uid}`,active:'eq.true'}).catch(()=>[]);
- const ids=links.map(x=>x.athlete_id);const profiles=ids.length?await get('profiles',{select:'*',id:`in.(${ids.join(',')})`}):[];
- const notes=ids.length?await get('coach_notes',{select:'*',coach_id:`eq.${uid}`,order:'created_at.desc',limit:100}).catch(()=>[]):[];
- return {links,profiles,notes};
-}
-async function addCoachNote(data){return (await post('coach_notes',data))[0]}
-async function techLog(uid,level,area,message,details={}){return post('tech_logs',{athlete_id:uid,level,area,message,details,app_version:'10.0-native',user_agent:navigator.userAgent}).catch(()=>null)}
-window.PTAPI={request,get,post,patch,del,user,bootstrap,workout,exerciseCatalog,previousSets,startSession,saveSet,finishSession,saveExerciseNote,substitutes,saveSubstitution,measurements,addMeasurement,saveCheckin,addGoal,updateGoal,progressData,nutrition,nutritionDay,createNutritionDay,addMeal,addMealItem,calendar,addCalendarEvent,removeCalendarEvent,notifications,markNotification,coach,addCoachNote,techLog};
+async function coach(uid){const links=await get('coach_athletes',{select:'*',coach_id:`eq.${uid}`,active:'eq.true'}).catch(()=>[]);if(!links.length)return {links,profiles:[],notes:[]};const ids=links.map(x=>x.athlete_id);const profiles=await get('profiles',{select:'id,display_name,first_name,last_name,role',id:`in.(${ids.join(',')})`}).catch(()=>[]);const notes=await get('coach_notes',{select:'*',coach_id:`eq.${uid}`,order:'created_at.desc',limit:100}).catch(()=>[]);return {links,profiles,notes}}
+async function uploadProgressPhoto(uid,file,type='front'){const c=config(),path=`progress/${uid}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;await request(`/storage/v1/object/exercise-media/${path}`,{method:'POST',body:file,raw:true,headers:{'Content-Type':file.type||'image/jpeg','x-upsert':'true'}});const publicUrl=`${c.url}/storage/v1/object/public/exercise-media/${path}`;return (await post('progress_photos',{athlete_id:uid,photo_date:new Date().toISOString().slice(0,10),photo_type:type,storage_path:path,public_url:publicUrl}))[0]}
+async function techLog(uid,level,area,message,details={}){try{return await post('tech_logs',{athlete_id:uid||null,level,area,message,details,app_version:'10.0.0-native',user_agent:navigator.userAgent})}catch{return null}}
+window.PTAPI={request,get,post,patch,del,user,bootstrap,workout,exerciseCatalog,previousSets,startSession,saveSet,finishSession,saveExerciseNote,substitute,progress,nutrition,nutritionDay,createNutritionDay,calendar,coach,uploadProgressPhoto,techLog};
 })();

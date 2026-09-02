@@ -10,5 +10,5 @@
     {id:'v10-more',src:'v10/more.js',domain:'tools'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='10.0.0-native.4';
+  window.PTPRO_APP_VERSION='10.0.0-native.5';
 })();

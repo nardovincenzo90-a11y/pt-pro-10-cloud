@@ -1,11 +1,11 @@
 import fs from 'node:fs';
-const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/wellness-engine.js','v10/wellness.js','v10/wellness-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/support.js','v10/final-runtime.js','v10/bootstrap.js','v10/styles.css','v10/features.css','v10/pro.css','v10/layout.css','supabase/PT-PRO_11_WELLNESS_SPORT_FOUNDATION.sql','supabase/PT-PRO_11_ADMIN_BOOTSTRAP.sql'];
+const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutrition-engine.js','v10/kernel.js','v10/wellness-engine.js','v10/wellness.js','v10/wellness-runtime.js','v10/admin-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/more.js','v10/pro.js','v10/pro-advanced.js','v10/admin-pro.js','v10/coach-engine.js','v10/appearance-pro.js','v10/support.js','v10/final-runtime.js','v10/bootstrap.js','v10/styles.css','v10/features.css','v10/pro.css','v10/layout.css','supabase/PT-PRO_11_WELLNESS_SPORT_FOUNDATION.sql','supabase/PT-PRO_11_ADMIN_BOOTSTRAP.sql','supabase/PT-PRO_11_SECURITY_HARDENING.sql'];
 for(const f of need){if(!fs.existsSync(f))throw new Error(`Missing ${f}`)}
 const index=fs.readFileSync('index.html','utf8');
 for(const css of ['/v10/styles.css','/v10/features.css','/v10/pro.css','/v10/layout.css'])if(!index.includes(css))throw new Error(`Missing style ${css}`);
 if(!index.includes('11.0.0-wellness-sport'))throw new Error('PT-PRO 11 cache release missing');
 const manifest=fs.readFileSync('app-manifest.js','utf8');
-for(const f of ['v10/api.js','v10/kernel.js','v10/wellness-engine.js','v10/wellness.js','v10/wellness-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/coach-engine.js','v10/support.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
+for(const f of ['v10/api.js','v10/kernel.js','v10/wellness-engine.js','v10/wellness.js','v10/wellness-runtime.js','v10/admin-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/coach-engine.js','v10/support.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
 if(!manifest.includes('11.0.0-WELLNESS-SPORT'))throw new Error('PT-PRO 11 release missing');
 const kernel=fs.readFileSync('v10/kernel.js','utf8');
 for(const token of ["['wellness','✨','Attività & Sport']","['onboarding','◎','Il mio percorso']","['admin-users','♛','Utenti & Attività']","['guide','?','Guida & Tutorial']", "title!=='AMMINISTRAZIONE'||role==='admin'"])if(!kernel.includes(token))throw new Error(`Navigation missing ${token}`);
@@ -17,10 +17,14 @@ const we=fs.readFileSync('v10/wellness-engine.js','utf8');
 for(const token of ['ageBand','modifiers','prescribe','safeguards','walking','running','strength','teamSport'])if(!we.includes(token))throw new Error(`Wellness engine missing ${token}`);
 const wr=fs.readFileSync('v10/wellness-runtime.js','utf8');
 for(const token of ['PTPROWellnessEngine','E.prescribe','E.safeguards','readinessFactor','week===4','activity_logs','calendar_events',"A.register('wellness-program'",'Completa attività','program_item_id'])if(!wr.includes(token))throw new Error(`Wellness runtime missing ${token}`);
+const ar=fs.readFileSync('v10/admin-runtime.js','utf8');
+for(const token of ['ptpro_claim_initial_admin','Il tuo ruolo Admin è protetto','registration_invites','coach_athletes','data-role-user','Nuovo invito','Aggiungi attività'])if(!ar.includes(token))throw new Error(`Admin runtime missing ${token}`);
 const sql=fs.readFileSync('supabase/PT-PRO_11_WELLNESS_SPORT_FOUNDATION.sql','utf8');
 for(const token of ['activities','user_activity_profiles','wellness_programs','wellness_program_days','wellness_program_items','activity_logs','registration_invites','ptpro_is_admin','redeem_registration_invite','Camminata','Corsa','Nuoto','Calcio','Yoga','Fitness senior'])if(!sql.includes(token))throw new Error(`Foundation SQL missing ${token}`);
 const adminSql=fs.readFileSync('supabase/PT-PRO_11_ADMIN_BOOTSTRAP.sql','utf8');
 for(const token of ['ptpro_claim_initial_admin','ptpro_admin_profiles_select','ptpro_admin_profiles_update','ptpro_admin_coach_athletes'])if(!adminSql.includes(token))throw new Error(`Admin bootstrap missing ${token}`);
+const securitySql=fs.readFileSync('supabase/PT-PRO_11_SECURITY_HARDENING.sql','utf8');
+for(const token of ['ptpro_registration_invites_role_check','ptpro_invites_insert','Solo un Admin può invitare un Coach','auth.jwt()','role <> \'admin\''])if(!securitySql.includes(token))throw new Error(`Security hardening missing ${token}`);
 const layout=fs.readFileSync('v10/layout.css','utf8');
 for(const token of ['safe-area-inset-top','safe-area-inset-bottom','100dvh','-webkit-text-size-adjust:100%','@media(max-width:390px)','input,select,textarea{font-size:16px!important'])if(!layout.includes(token))throw new Error(`iPhone layout missing ${token}`);
 const appearance=fs.readFileSync('v10/appearance-pro.js','utf8');

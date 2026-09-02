@@ -15,5 +15,5 @@ const contracts={
  releaseAudit:['RLS blocca accesso anonimo','Smart Coach unico','Nutrizione unica']
 };
 for(const [area,tokens] of Object.entries(contracts))for(const token of tokens)if(!all.includes(token))throw new Error(`${area}: contract token missing: ${token}`);
-const index=fs.readFileSync('index.html','utf8');for(const f of ['app-manifest.js','auth-gate.js','progress-evolution.js','progress-report-evolution.js','nutrition-evolution.js','nutrition-cloud-engine.js','nutrition-runtime-evolution.js','smart-coach-evolution.js','calendar-coach-evolution.js','notifications-evolution.js','hardening-evolution.js','workout-summary-evolution.js','release-audit-evolution.js'])if(!index.includes(f))throw new Error('index missing '+f);
+const index=fs.readFileSync('index.html','utf8'),manifest=fs.readFileSync('app-manifest.js','utf8');for(const f of ['app-manifest.js','auth-gate.js'])if(!index.includes(f))throw new Error('index missing '+f);for(const f of ['v10/api.js','v10/kernel.js','v10/home.js','v10/exercise-guides.js','v10/school.js'])if(!manifest.includes(f))throw new Error('manifest missing '+f);
 console.log('PT-PRO static E2E contracts OK');

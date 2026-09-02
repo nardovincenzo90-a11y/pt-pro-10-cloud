@@ -7,6 +7,8 @@
     {id:'v11-wellness-engine',src:'v10/wellness-engine.js',domain:'wellness-engine'},
     {id:'v11-sport-library',src:'v10/sport-library.js',domain:'sport-library'},
     {id:'v11-sport-walking',src:'v10/sport-library-walking.js',domain:'sport-library-walking'},
+    {id:'v12-exercise-guide-library',src:'v10/exercise-guide-library.js',domain:'exercise-guide-library'},
+    {id:'v12-exercise-guides',src:'v10/exercise-guides.js',domain:'exercise-guides'},
     {id:'v11-wellness',src:'v10/wellness.js',domain:'wellness'},
     {id:'v11-wellness-runtime',src:'v10/wellness-runtime.js',domain:'wellness-runtime'},
     {id:'v11-admin-runtime',src:'v10/admin-runtime.js',domain:'admin-runtime'},
@@ -28,5 +30,5 @@
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.1.2-WELLNESS-SCHOOL-CLOUD';
+  window.PTPRO_APP_VERSION='11.2.1-PRO-NUTRITION-ADMIN';
 })();

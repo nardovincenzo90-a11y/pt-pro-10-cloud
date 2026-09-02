@@ -12,7 +12,15 @@ const lessons=[
 {school:'II grado',sport:'Atletica',title:'Resistenza e pacing',goal:'Gestione dello sforzo e autonomia',steps:['Warm-up 10′','Tecnica 8′','Intervalli 6×2′/1′','Pacing finale 8′','Defaticamento 8′']},
 {school:'II grado',sport:'Fitness',title:'Circuit training scolastico',goal:'Forza generale e autoregolazione',steps:['Mobilità 8′','Circuito 8 stazioni × 35″/25″','Recupero 3′','Secondo giro','Stretching 6′']},
 {school:'II grado',sport:'Pallavolo',title:'Ricezione, alzata e attacco',goal:'Sequenza tecnica e gioco di squadra',steps:['Warm-up 8′','Ricezione a zone 12′','Alzata 10′','Rincorsa e attacco 12′','4v4 18′']},
-{school:'II grado',sport:'Basket',title:'Transizione e tiro',goal:'Velocità decisionale e precisione',steps:['Warm-up con palla 8′','Contropiede 3 corsie 12′','Tiro in arresto 12′','1v1 da vantaggio 10′','4v4 18′']}
+{school:'II grado',sport:'Basket',title:'Transizione e tiro',goal:'Velocità decisionale e precisione',steps:['Warm-up con palla 8′','Contropiede 3 corsie 12′','Tiro in arresto 12′','1v1 da vantaggio 10′','4v4 18′']},
+{school:'I grado',sport:'Ginnastica/Fitness',title:'Schemi motori e circuito base',goal:'Controllo del corpo e autonomia',steps:['Mobilità guidata 8′','Squat e hip hinge educativi 12′','Circuito 6 stazioni 20′','Sfida cooperativa 12′','Respirazione 5′']},
+{school:'I grado',sport:'Ultimate',title:'Lancio, presa e fair play',goal:'Cooperazione e responsabilità',steps:['Attivazione con disco 8′','Prese a coppie 10′','Dritto e rovescio 12′','Smarcamento 10′','Ultimate 4v4 20′']},
+{school:'I grado',sport:'Nuoto',title:'Sicurezza e acquaticità',goal:'Orientamento, respirazione e galleggiamento',steps:['Regole bordo vasca 5′','Respirazione 10′','Galleggiamenti 12′','Scivolamenti 12′','Gioco acquatico 15′']},
+{school:'II grado',sport:'Tennis',title:'Scambio e costruzione del punto',goal:'Tecnica, tattica semplice e autonomia',steps:['Footwork 8′','Diritto e rovescio 15′','Servizio 10′','Scambio vincolato 12′','Tie-break didattico 15′']},
+{school:'II grado',sport:'Orienteering',title:'Orientamento e problem solving',goal:'Lettura spazio, collaborazione e resistenza',steps:['Simboli e sicurezza 10′','Esercizi carta 10′','Percorso a coppie 25′','Staffetta orientamento 15′','Debrief 5′']},
+{school:'II grado',sport:'Rugby educativo',title:'Avanzamento e sostegno',goal:'Cooperazione, rispetto e occupazione degli spazi',steps:['Attivazione 8′','Passaggio all’indietro 12′','Sostegno 10′','Touch rugby 25′','Feedback 5′']},
+{school:'II grado',sport:'Danza',title:'Ritmo e composizione',goal:'Espressività, coordinazione e lavoro di gruppo',steps:['Pulse e mobilità 8′','Passi base 12′','Sequenza 15′','Creazione a gruppi 20′','Presentazione 10′']},
+{school:'II grado',sport:'Mobilità',title:'Postura e recupero attivo',goal:'Consapevolezza corporea e gestione dello stress',steps:['Respirazione 6′','Mobilità colonna 12′','Anche e spalle 15′','Sequenza autonoma 15′','Rilassamento 8′']}
 ];
 const fundamentals={
 'Atletica':['skip e andature','partenza','accelerazione','corsa ritmica','stacco e atterraggio','lancio'],
@@ -24,7 +32,11 @@ const fundamentals={
 'Badminton':['presa','clear','drop','servizio','smash','footwork'],
 'Nuoto':['assetto','respirazione','presa','trazione','battuta gambe','virata'],
 'Ginnastica/Fitness':['squat','affondo','push-up','plank','hip hinge','mobilità'],
-'Ultimate':['presa','lancio dritto','lancio rovescio','pivot','smarcamento','fair play']
+'Ultimate':['presa','lancio dritto','lancio rovescio','pivot','smarcamento','fair play'],
+'Rugby educativo':['presa','passaggio all’indietro','avanzamento','sostegno','touch','fair play'],
+'Orienteering':['orientare la carta','legenda','scala','azimut semplice','scelta percorso','sicurezza'],
+'Danza':['ritmo','passo base','direzioni','livelli','sequenza','composizione'],
+'Arrampicata':['appoggi piedi','prese','equilibrio','spostamento','sicurezza','cooperazione']
 };
 const tests=[
 {name:'30 m sprint',capacity:'Velocità',unit:'s',protocol:'Partenza alta, 30 m lineari, 2 prove con recupero completo; registra la migliore.'},
@@ -32,7 +44,10 @@ const tests=[
 {name:'Shuttle 10×5 m',capacity:'Agilità',unit:'s',protocol:'Due linee a 5 m, 10 percorrenze totali con cambi direzione; cronometra il tempo.'},
 {name:'Cooper 12 minuti',capacity:'Resistenza',unit:'m',protocol:'Percorri la massima distanza sostenibile in 12 minuti su tracciato misurato.'},
 {name:'Sit and reach',capacity:'Mobilità',unit:'cm',protocol:'Ginocchia estese, avanzamento lento delle mani; evita molleggi.'},
-{name:'Plank',capacity:'Core endurance',unit:'s',protocol:'Allineamento testa-tronco-bacino; termina quando la tecnica non è più mantenuta.'}
+{name:'Plank',capacity:'Core endurance',unit:'s',protocol:'Allineamento testa-tronco-bacino; termina quando la tecnica non è più mantenuta.'},
+{name:'Lancio palla medica',capacity:'Potenza arti superiori',unit:'cm',protocol:'Seduto o in piedi secondo protocollo, lancio frontale; 2 prove e migliore misura.'},
+{name:'Equilibrio monopodalico',capacity:'Equilibrio',unit:'s',protocol:'Mani ai fianchi, un piede sollevato; termina a perdita della posizione, massimo 60 secondi.'},
+{name:'Yo-Yo semplificato',capacity:'Resistenza intermittente',unit:'m',protocol:'Navette progressive da 20 m con recupero attivo e arresto volontario o tecnico.'}
 ];
 const games=[
 {name:'Palla prigioniera evoluta',focus:'Reazione, lancio, collaborazione',rule:'Chi viene colpito svolge un compito motorio breve e rientra: nessuna eliminazione lunga.'},
@@ -42,7 +57,10 @@ const games=[
 {name:'Ultimate semplificato',focus:'Spazi, smarcamento e fair play',rule:'Non si corre con il disco/palla; punto dopo ricezione in zona meta.'},
 {name:'Memory motorio',focus:'Anatomia + movimento',rule:'Abbina carta-muscolo e carta-funzione; dopo l’abbinamento esegui un gesto collegato.'},
 {name:'Torre dei passaggi',focus:'Cooperazione e precisione',rule:'La squadra conquista un punto dopo 6 passaggi consecutivi senza intercetto.'},
-{name:'Bingo motorio',focus:'Varietà motoria',rule:'Ogni casella contiene un compito: equilibrio, salto, lancio, mobilità o sprint breve.'}
+{name:'Bingo motorio',focus:'Varietà motoria',rule:'Ogni casella contiene un compito: equilibrio, salto, lancio, mobilità o sprint breve.'},
+{name:'Missione inclusiva',focus:'Cooperazione e adattamento',rule:'Ogni gruppo completa compiti a livelli scegliendo variante, materiale e ruolo per coinvolgere tutti.'},
+{name:'Orienteering in palestra',focus:'Orientamento e problem solving',rule:'Trova stazioni usando una semplice mappa e completa un compito motorio a ogni controllo.'},
+{name:'Costruisci il circuito',focus:'Autonomia e competenze',rule:'I gruppi progettano una stazione sicura, la spiegano e la fanno provare ai compagni.'}
 ];
 const anatomy=[
 {q:'Quadricipite',a:'Estende il ginocchio',wrong:['Flette il gomito','Muove principalmente la spalla','Ruota il polso']},

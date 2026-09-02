@@ -19,6 +19,7 @@
     {id:'v11-school-cloud',src:'v10/school-cloud-runtime.js',domain:'school-cloud'},
     {id:'v13-school-pro',src:'v10/school-pro.js',domain:'school-pro'},
     {id:'v14-school-academy-library',src:'v10/school-academy-library.js',domain:'school-academy-library'},
+    {id:'v15-school-planner-library',src:'v10/school-planner-library.js',domain:'school-planner-library'},
     {id:'v10-home',src:'v10/home.js',domain:'home'},
     {id:'v10-workout',src:'v10/workout.js',domain:'workout'},
     {id:'v10-progress',src:'v10/progress.js',domain:'progress'},
@@ -38,7 +39,8 @@
     {id:'v13-nutrition-session',src:'v10/nutrition-session-pro.js',domain:'nutrition-session'},
     {id:'v13-school-tools',src:'v10/school-tools-runtime.js',domain:'school-tools'},
     {id:'v14-school-academy',src:'v10/school-academy-runtime.js',domain:'school-academy'},
+    {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.4.0-PRO-SCHOOL-ACADEMY';
+  window.PTPRO_APP_VERSION='11.5.0-PRO-TEACHER-PLANNER';
 })();

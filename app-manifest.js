@@ -19,6 +19,7 @@
     {id:'v10-pro-advanced',src:'v10/pro-advanced.js',domain:'pro-evolution'},
     {id:'v10-admin-pro',src:'v10/admin-pro.js',domain:'data-manager'},
     {id:'v10-coach-engine',src:'v10/coach-engine.js',domain:'smart-coach'},
+    {id:'v11-coach-sport-runtime',src:'v10/coach-sport-runtime.js',domain:'smart-coach-sport'},
     {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
     {id:'v10-support',src:'v10/support.js',domain:'support'},
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},

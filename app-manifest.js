@@ -14,7 +14,8 @@
     {id:'v10-admin-pro',src:'v10/admin-pro.js',domain:'data-manager'},
     {id:'v10-coach-engine',src:'v10/coach-engine.js',domain:'smart-coach'},
     {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
+    {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='10.0.6-PRO-NAV-FIX';
+  window.PTPRO_APP_VERSION='10.1.0-PRO-COMPLETE';
 })();

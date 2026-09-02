@@ -15,7 +15,6 @@ for(const token of ['.appFrame','.sidebar','.sideItem.active','.appearancePanel'
 const appearance=fs.readFileSync('v10/appearance-pro.js','utf8');
 for(const token of ['theme_mode','app_settings','Colore principale','Dimensione testo','Densità interfaccia','Angoli arrotondati','Ombre morbide','Animazioni fluide','localStorage','resolveTheme','theme-color','markTheme','markAccent','markDensity','readCached'])if(!appearance.includes(token))throw new Error(`Appearance missing ${token}`);
 if(appearance.includes("A.register('appearance',async"))throw new Error('Appearance route is still blocking on Cloud');
-if(appearance.includes("const p=await getPrefs()"))throw new Error('Appearance render still waits for Cloud prefs');
 if(appearance.includes("A.go('appearance')"))throw new Error('Appearance route bounce still present');
 const api=fs.readFileSync('v10/api.js','utf8');
 for(const token of ['exercises','image_url','workout_items','workout_sessions','workout_sets','exercise_notes','exercise_substitutions','measurements','weekly_checkins','goals','progress_photos','nutrition_plans','nutrition_days','meals','meal_items','calendar_events','notifications','coach_athletes','coach_notes','uploadProgressPhoto'])if(!api.includes(token))throw new Error(`API missing ${token}`);

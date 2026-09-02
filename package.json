@@ -1,9 +1,9 @@
 {
   "name": "pt-pro-10-cloud",
-  "version": "10.0.0-rc2",
+  "version": "10.0.0-rebuild.1",
   "private": true,
   "scripts": {
-    "test": "node tests/smoke.mjs && node tests/e2e-static.mjs && node tests/performance-budget.mjs && node tests/release-readiness.mjs",
-    "check": "node --check app-manifest.js && node --check auth-gate.js && node --check telemetry.js && node --check ui-fixes.js && node --check cloud-evolution.js && node --check ux-unifier.js && node --check progress-evolution.js && node --check progress-report-evolution.js && node --check nutrition-evolution.js && node --check nutrition-cloud-engine.js && node --check nutrition-runtime-evolution.js && node --check smart-coach-evolution.js && node --check calendar-coach-evolution.js && node --check notifications-evolution.js && node --check onboarding-evolution.js && node --check hardening-evolution.js && node --check workout-summary-evolution.js && node --check release-audit-evolution.js && node --check media-evolution.js && node --check sw.js && node --check app-1.js && node --check app-2.js && node --check app-3.js && node --check app-4.js && node --check app-5.js && node --check app-6.js && node --check api/config.js"
+    "check": "node --check app-manifest.js && node --check auth-gate.js && node --check v10/api.js && node --check v10/app.js && node --check api/config.js",
+    "test": "node tests/v10-smoke.mjs"
   }
 }

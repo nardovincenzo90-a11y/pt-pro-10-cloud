@@ -1,9 +1,9 @@
 {
   "name": "pt-pro-10-cloud",
-  "version": "10.1.0-pro-complete",
+  "version": "10.1.1-pro-support",
   "private": true,
   "scripts": {
-    "check": "node --check app-manifest.js && node --check auth-gate.js && node --check v10/api.js && node --check v10/nutrition-engine.js && node --check v10/kernel.js && node --check v10/home.js && node --check v10/workout.js && node --check v10/progress.js && node --check v10/nutrition.js && node --check v10/more.js && node --check v10/pro.js && node --check v10/pro-advanced.js && node --check v10/admin-pro.js && node --check v10/coach-engine.js && node --check v10/appearance-pro.js && node --check v10/final-runtime.js && node --check v10/bootstrap.js && node --check api/config.js",
+    "check": "node --check app-manifest.js && node --check auth-gate.js && node --check v10/api.js && node --check v10/nutrition-engine.js && node --check v10/kernel.js && node --check v10/home.js && node --check v10/workout.js && node --check v10/progress.js && node --check v10/nutrition.js && node --check v10/more.js && node --check v10/pro.js && node --check v10/pro-advanced.js && node --check v10/admin-pro.js && node --check v10/coach-engine.js && node --check v10/appearance-pro.js && node --check v10/support.js && node --check v10/final-runtime.js && node --check v10/bootstrap.js && node --check api/config.js",
     "test": "node tests/v10-smoke.mjs"
   }
 }

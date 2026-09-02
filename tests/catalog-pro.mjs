@@ -1,0 +1,11 @@
+import fs from 'node:fs';import vm from 'node:vm';
+const context={window:{}};vm.createContext(context);
+for(const file of ['v10/universal-catalog.js','v10/nutrition-library.js'])vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
+const c=context.window.PTPROUniversalCatalog,n=context.window.PTPRONutritionLibrary;
+if(c.exercises.length<300||c.exercises.length>500)throw Error(`Numero esercizi non valido: ${c.exercises.length}`);
+if(n.foods.length<200||n.foods.length>300)throw Error(`Numero alimenti non valido: ${n.foods.length}`);
+if(n.recipes.length<80||n.recipes.length>120)throw Error(`Numero ricette non valido: ${n.recipes.length}`);
+for(const key of ['steps','errors','breathing','level','muscle_group','equipment','alternatives','image_url'])if(c.exercises.some(x=>!x[key]||(Array.isArray(x[key])&&!x[key].length)))throw Error(`Campo esercizio mancante: ${key}`);
+if(n.foods.some(x=>!x.portion_g||!Array.isArray(x.allergens)))throw Error('Porzioni o allergeni mancanti');
+const school=fs.readFileSync('v10/school-pro.js','utf8');for(const token of ['Protocollo passo-passo','Errori comuni','Sicurezza','Valutazione','Genera lezione completa'])if(!school.includes(token))throw Error(`Scuola PRO incompleta: ${token}`);
+console.log(`Catalogo PRO OK: ${c.exercises.length} esercizi, ${n.foods.length} alimenti, ${n.recipes.length} ricette`);

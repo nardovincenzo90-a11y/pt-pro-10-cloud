@@ -3,14 +3,14 @@ const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutr
 for(const f of need){if(!fs.existsSync(f))throw new Error(`Missing ${f}`)}
 const index=fs.readFileSync('index.html','utf8');
 for(const css of ['/v10/styles.css','/v10/features.css','/v10/pro.css','/v10/layout.css'])if(!index.includes(css))throw new Error(`Missing style ${css}`);
-if(!index.includes('11.2.2-pro-nutrition-foods'))throw new Error('PT-PRO 11.2.2 cache release missing');
+if(!index.includes('11.3.0-pro-universal-catalog'))throw new Error('PT-PRO 11.3.0 cache release missing');
 const manifest=fs.readFileSync('app-manifest.js','utf8');
 for(const f of ['v10/api.js','v10/kernel.js','v10/wellness-engine.js','v10/sport-library.js','v10/sport-library-walking.js','v10/exercise-guide-library.js','v10/exercise-guides.js','v10/wellness.js','v10/wellness-runtime.js','v10/admin-runtime.js','v10/school.js','v10/school-cloud-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/reports-sport-runtime.js','v10/coach-engine.js','v10/coach-sport-runtime.js','v10/support.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
-if(!manifest.includes('11.2.2-PRO-NUTRITION-FOODS'))throw new Error('PT-PRO 11.2.2 release missing');
+if(!manifest.includes('11.3.0-PRO-UNIVERSAL-CATALOG'))throw new Error('PT-PRO 11.3.0 release missing');
 const kernel=fs.readFileSync('v10/kernel.js','utf8');
 for(const token of ["['wellness','✨','Attività & Sport']","['onboarding','◎','Il mio percorso']","['school','🎓','Area Docenti']","['school-register','▤','Registro Cloud']","['school','🎓','Scuola']","['admin-users','♛','Dashboard Admin']","['guide','?','Guida & Tutorial']", "title!=='AMMINISTRAZIONE'||role==='admin'"])if(!kernel.includes(token))throw new Error(`Navigation missing ${token}`);
 for(const token of ['mobileMenuLayer','mobileDrawer','data-menu-open','data-menu-close','touchstart','aria-modal="true"'])if(!kernel.includes(token))throw new Error(`Mobile drawer missing ${token}`);
-if(!kernel.includes("['exercise-guides','▦','Guide illustrate']"))throw new Error('Guide navigation missing');
+if(!kernel.includes("['exercise-guides','▦','Archivio esercizi']"))throw new Error('Archivio esercizi navigation missing');
 const auth=fs.readFileSync('auth-gate.js','utf8');
 for(const token of ['Registrati','Recupera password','renderSignup','renderRecovery','redeemPendingInvite','/auth/v1/signup','/auth/v1/recover'])if(!auth.includes(token))throw new Error(`Auth missing ${token}`);
 const wellness=fs.readFileSync('v10/wellness.js','utf8');

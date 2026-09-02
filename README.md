@@ -20,12 +20,12 @@ Il generatore Cloud usa gli alimenti reali in `foods`, i target del piano attivo
 
 ### Sicurezza e qualità
 
-Non viene usata alcuna `service_role` nel frontend. La configurazione runtime espone soltanto URL Supabase e publishable key. `release-audit-evolution.js` verifica letture autenticate, blocco anonimo, duplicazioni UI e tempi di caricamento e registra l'esito localmente/telemetria. La CI esegue syntax check, smoke test, contratti E2E statici e performance budget.
+Non viene usata alcuna `service_role` nel frontend. La configurazione runtime espone soltanto URL Supabase e publishable key. `release-audit-evolution.js` verifica letture autenticate, blocco anonimo, duplicazioni UI e tempi di caricamento e registra l'esito localmente/telemetria. La CI esegue syntax check, smoke test, contratti E2E statici, performance budget e release-readiness gate.
 
 ### Notifiche
 
-Sono supportate notifiche browser tramite Notification API + service worker, polling delle notifiche interne e handler `push`/`notificationclick`. L'invio Web Push remoto a browser completamente chiuso richiede un sender server-side/VAPID e non inserisce segreti nel client.
+Sono supportate notifiche browser tramite Notification API + service worker, polling delle notifiche interne e handler `push`/`notificationclick`. L'invio Web Push remoto a browser completamente chiuso richiede un sender server-side/VAPID e segreti server-side: non vengono inseriti segreti nel client.
 
 ## Ultimo passaggio prima della 1.0
 
-Il media restore è volutamente l'ultimo step: Supabase Storage, 91 immagini esercizi legacy, `exercises.image_url` e upload foto progressi. Dopo il controllo live finale viene pubblicata la release 1.0.
+Il codice pre-media è in RC1. Restano il controllo live autenticato dei flussi principali e il media restore finale: Supabase Storage, 91 immagini esercizi legacy, `exercises.image_url` e upload foto progressi. Dopo il controllo finale viene pubblicata la release 1.0.

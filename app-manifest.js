@@ -13,7 +13,8 @@
     {id:'v10-pro-advanced',src:'v10/pro-advanced.js',domain:'pro-evolution'},
     {id:'v10-admin-pro',src:'v10/admin-pro.js',domain:'data-manager'},
     {id:'v10-coach-engine',src:'v10/coach-engine.js',domain:'smart-coach'},
+    {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='10.0.0-PRO-EVOLUTION-FINAL';
+  window.PTPRO_APP_VERSION='10.0.2-PRO-DESIGN';
 })();

@@ -34,7 +34,9 @@
     {id:'v10-support',src:'v10/support.js',domain:'support'},
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v13-catalog-runtime',src:'v10/catalog-runtime.js',domain:'catalog-runtime'},
+    {id:'v13-nutrition-session',src:'v10/nutrition-session-pro.js',domain:'nutrition-session'},
+    {id:'v13-school-tools',src:'v10/school-tools-runtime.js',domain:'school-tools'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.3.1-PRO-WELLNESS-PHOTO-GUIDES';
+  window.PTPRO_APP_VERSION='11.3.2-PRO-DIRECT-GENERATION-SCHOOL';
 })();

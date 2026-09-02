@@ -1,0 +1,18 @@
+(() => {
+'use strict';
+const CFG='ptpro10_supabase_config', SES='ptpro10_session';
+const cfg=()=>{try{return JSON.parse(localStorage.getItem(CFG)||'null')}catch{return null}};
+const ses=()=>{try{return JSON.parse(localStorage.getItem(SES)||'null')}catch{return null}};
+async function rest(path){const c=cfg(),s=ses();if(!c||!s?.access_token)throw Error('Sessione non disponibile');const r=await fetch(c.url+'/rest/v1/'+path,{headers:{apikey:c.key,Authorization:'Bearer '+s.access_token}});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
+const n=v=>Number(v||0), fmt=(v,s='')=>Number.isFinite(Number(v))?Number(v).toLocaleString('it-IT',{maximumFractionDigits:1})+s:'—';
+async function summary(){try{const [m,s,g,c,prs]=await Promise.all([
+rest('measurements?select=*&order=measured_at.desc&limit=20').catch(()=>[]),
+rest('workout_sessions?select=id,started_at,duration_minutes,completion_percent,status&order=started_at.desc&limit=60').catch(()=>[]),
+rest('goals?select=id,title,status,target_value,current_value,target_date&order=created_at.desc&limit=10').catch(()=>[]),
+rest('weekly_checkins?select=*&order=checkin_date.desc&limit=8').catch(()=>[]),
+rest('v_exercise_prs?select=*&limit=12').catch(()=>[])
+]);return {m,s,g,c,prs}}catch{return null}}
+function inject(){if(document.getElementById('ptproProgressCss'))return;const x=document.createElement('style');x.id='ptproProgressCss';x.textContent=`.ptpro-progressHub{margin:12px 0 18px}.ptpro-progressKpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ptpro-progressKpi{padding:13px;border-radius:17px;background:#121b29;border:1px solid #26354d}.ptpro-progressKpi b{display:block;font-size:20px}.ptpro-progressKpi span{font-size:10px;color:#91a0b7;text-transform:uppercase;letter-spacing:.06em}.ptpro-progressNote{margin-top:8px;font-size:11px;color:#91a0b7}@media(max-width:680px){.ptpro-progressKpis{grid-template-columns:repeat(2,1fr)}}`;document.head.appendChild(x)}
+async function enhance(){const h=[...document.querySelectorAll('h1')].find(x=>/Progressi/i.test(x.textContent||''));if(!h||document.getElementById('ptproProgressHub'))return;const d=await summary();if(!d)return;inject();const latest=d.m[0]||{},prev=d.m[1]||{};const now=Date.now(),week=d.s.filter(x=>now-new Date(x.started_at).getTime()<7*864e5);const mins=week.reduce((a,x)=>a+n(x.duration_minutes),0);const weightDelta=latest.weight_kg!=null&&prev.weight_kg!=null?n(latest.weight_kg)-n(prev.weight_kg):null;const activeGoals=d.g.filter(x=>String(x.status).toLowerCase()!=='completed'&&String(x.status).toLowerCase()!=='done').length;const box=document.createElement('section');box.id='ptproProgressHub';box.className='ptpro-progressHub';box.innerHTML=`<div class="ptpro-progressKpis"><div class="ptpro-progressKpi"><b>${fmt(latest.weight_kg,' kg')}</b><span>Peso attuale</span></div><div class="ptpro-progressKpi"><b>${weightDelta==null?'—':(weightDelta>0?'+':'')+fmt(weightDelta,' kg')}</b><span>Trend peso</span></div><div class="ptpro-progressKpi"><b>${week.length}</b><span>Workout 7 giorni</span></div><div class="ptpro-progressKpi"><b>${mins}′</b><span>Volume tempo</span></div></div><div class="ptpro-progressNote">Centro Progressi Cloud · ${activeGoals} obiettivi attivi · ${d.c.length?'check-in collegati':'aggiungi check-in per migliorare Smart Coach'} · PR/e1RM collegati allo storico.</div>`;h.closest('.viewTitle')?.after(box)}
+const o=new MutationObserver(()=>enhance());o.observe(document.documentElement,{subtree:true,childList:true});setTimeout(enhance,1300);
+})();

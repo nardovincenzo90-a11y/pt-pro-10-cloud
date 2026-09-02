@@ -1,112 +1,17 @@
 (() => {
-  'use strict';
-
-  const CFG_KEY = 'ptpro10_supabase_config';
-  const SESSION_KEY = 'ptpro10_session';
-  const app = document.getElementById('app');
-
-  const esc = (v='') => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-  function renderCard(inner){
-    app.innerHTML = `
-      <div style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#090d14;color:#f5f7fb;font-family:system-ui,-apple-system,Segoe UI,sans-serif">
-        <div style="width:min(100%,440px);background:#121a27;border:1px solid #2a3850;border-radius:28px;padding:26px;box-shadow:0 22px 70px #0007">
-          <div style="width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#7657ff,#477eff);display:grid;place-items:center;font-size:22px;font-weight:900;margin-bottom:18px">PT</div>
-          ${inner}
-        </div>
-      </div>`;
-  }
-
-  function renderLoading(text='Caricamento PT-PRO Cloud…'){
-    renderCard(`<h1 style="margin:0 0 8px">PT-PRO 10 Cloud</h1><p style="color:#91a0b7">${esc(text)}</p>`);
-  }
-
-  function renderError(message){
-    renderCard(`<h1 style="margin:0 0 8px">PT-PRO 10 Cloud</h1><p style="color:#91a0b7">Errore durante il caricamento.</p><div style="margin-top:14px;padding:12px;border-radius:13px;background:#3a2332;border:1px solid #8b465d;color:#ff7894">${esc(message)}</div><button id="retryCloud" style="width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px;font-weight:800;background:linear-gradient(135deg,#7657ff,#4f7eff);color:#fff;cursor:pointer">Riprova</button>`);
-    document.getElementById('retryCloud').onclick = boot;
-  }
-
-  function renderLogin(error=''){
-    renderCard(`
-      <h1 style="margin:0 0 8px">Bentornato</h1>
-      <p style="color:#91a0b7;margin:0 0 18px">Accedi a PT-PRO 10 Cloud.</p>
-      ${error ? `<div style="margin:12px 0;padding:12px;border-radius:13px;background:#3a2332;border:1px solid #8b465d;color:#ff7894">${esc(error)}</div>` : ''}
-      <form id="cloudLoginForm">
-        <label style="display:grid;gap:7px;margin:13px 0"><span style="font-size:12px;font-weight:800;color:#a9b8cf">Email</span><input id="cloudEmail" type="email" autocomplete="username" required style="width:100%;background:#182233;color:#f5f7fb;border:1px solid #2a3850;border-radius:14px;padding:14px;outline:none"></label>
-        <label style="display:grid;gap:7px;margin:13px 0"><span style="font-size:12px;font-weight:800;color:#a9b8cf">Password</span><input id="cloudPassword" type="password" autocomplete="current-password" required style="width:100%;background:#182233;color:#f5f7fb;border:1px solid #2a3850;border-radius:14px;padding:14px;outline:none"></label>
-        <button id="cloudLoginBtn" type="submit" style="width:100%;margin-top:9px;border:0;border-radius:14px;padding:13px;font-weight:850;background:linear-gradient(135deg,#7657ff,#4f7eff);color:#fff;cursor:pointer">Accedi</button>
-      </form>
-      <p style="font-size:12px;color:#91a0b7;margin-top:14px">Connessione Supabase gestita automaticamente da Vercel.</p>`);
-
-    document.getElementById('cloudLoginForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('cloudLoginBtn');
-      btn.disabled = true; btn.textContent = 'Accesso…';
-      try {
-        const cfg = loadConfig();
-        const res = await fetch(`${cfg.url}/auth/v1/token?grant_type=password`, {
-          method: 'POST',
-          headers: { apikey: cfg.key, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: document.getElementById('cloudEmail').value, password: document.getElementById('cloudPassword').value })
-        });
-        const data = await res.json();
-        if(!res.ok) throw new Error(data?.msg || data?.message || data?.error_description || 'Accesso non riuscito');
-        localStorage.setItem(SESSION_KEY, JSON.stringify(data));
-        renderLoading('Accesso riuscito. Carico PT-PRO…');
-        await loadAppScripts();
-      } catch(err){ renderLogin(err.message); }
-    };
-  }
-
-  function loadConfig(){
-    try { return JSON.parse(localStorage.getItem(CFG_KEY) || 'null'); } catch { return null; }
-  }
-  function loadSession(){
-    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; }
-  }
-
-  async function fetchRuntimeConfig(){
-    const res = await fetch('/api/config', { cache: 'no-store' });
-    const data = await res.json();
-    if(!res.ok || !data?.url || !data?.key) throw new Error(data?.error || 'Configurazione Supabase non disponibile');
-    const cfg = { url: String(data.url).replace(/\/+$/,''), key: data.key };
-    localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
-    return cfg;
-  }
-
-  async function validateOrRefresh(cfg, session){
-    if(!session?.access_token) return null;
-    let res = await fetch(`${cfg.url}/auth/v1/user`, { headers: { apikey: cfg.key, Authorization: `Bearer ${session.access_token}` } });
-    if(res.ok) return session;
-    if(!session.refresh_token) return null;
-    res = await fetch(`${cfg.url}/auth/v1/token?grant_type=refresh_token`, {
-      method:'POST', headers:{apikey:cfg.key,'Content-Type':'application/json'}, body:JSON.stringify({refresh_token:session.refresh_token})
-    });
-    const data = await res.json();
-    if(!res.ok) return null;
-    localStorage.setItem(SESSION_KEY, JSON.stringify(data));
-    return data;
-  }
-
-  async function loadAppScripts(){
-    app.innerHTML = '';
-    const files = ['app-1.js','app-2.js','app-3.js','app-4.js','app-5.js','app-6.js'];
-    for(const src of files){
-      await new Promise((resolve,reject)=>{
-        const s=document.createElement('script'); s.src=src+'?v=10.0.0-evolution.2'; s.onload=resolve; s.onerror=()=>reject(new Error('Impossibile caricare '+src)); document.body.appendChild(s);
-      });
-    }
-  }
-
-  async function boot(){
-    renderLoading();
-    try{
-      const cfg = await fetchRuntimeConfig();
-      const session = await validateOrRefresh(cfg, loadSession());
-      if(!session){ localStorage.removeItem(SESSION_KEY); renderLogin(); return; }
-      await loadAppScripts();
-    }catch(err){ renderError(err.message); }
-  }
-
-  boot();
+'use strict';
+const CFG_KEY='ptpro10_supabase_config',SESSION_KEY='ptpro10_session',app=document.getElementById('app');
+const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderCard(inner){app.innerHTML=`<div style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#090d14;color:#f5f7fb;font-family:system-ui,-apple-system,Segoe UI,sans-serif"><div style="width:min(100%,440px);background:#121a27;border:1px solid #2a3850;border-radius:28px;padding:26px;box-shadow:0 22px 70px #0007"><div style="width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#7657ff,#477eff);display:grid;place-items:center;font-size:22px;font-weight:900;margin-bottom:18px">PT</div>${inner}</div></div>`}
+function renderLoading(text='Caricamento PT-PRO Cloud…'){renderCard(`<h1 style="margin:0 0 8px">PT-PRO 10 Cloud</h1><p style="color:#91a0b7">${esc(text)}</p>`)}
+function renderError(message){renderCard(`<h1 style="margin:0 0 8px">PT-PRO 10 Cloud</h1><p style="color:#91a0b7">Errore durante il caricamento.</p><div style="margin-top:14px;padding:12px;border-radius:13px;background:#3a2332;border:1px solid #8b465d;color:#ff7894">${esc(message)}</div><button id="retryCloud" style="width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px;font-weight:800;background:linear-gradient(135deg,#7657ff,#4f7eff);color:#fff;cursor:pointer">Riprova</button>`);document.getElementById('retryCloud').onclick=boot}
+function loadConfig(){try{return JSON.parse(localStorage.getItem(CFG_KEY)||'null')}catch{return null}}
+function loadSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
+async function fetchRuntimeConfig(){const res=await fetch('/api/config',{cache:'no-store'}),data=await res.json();if(!res.ok||!data?.url||!data?.key)throw Error(data?.error||'Configurazione Supabase non disponibile');const cfg={url:String(data.url).replace(/\/+$/,''),key:data.key};localStorage.setItem(CFG_KEY,JSON.stringify(cfg));return cfg}
+async function validateOrRefresh(cfg,session){if(!session?.access_token)return null;let res=await fetch(`${cfg.url}/auth/v1/user`,{headers:{apikey:cfg.key,Authorization:`Bearer ${session.access_token}`}});if(res.ok)return session;if(!session.refresh_token)return null;res=await fetch(`${cfg.url}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:session.refresh_token})});const data=await res.json();if(!res.ok)return null;localStorage.setItem(SESSION_KEY,JSON.stringify(data));return data}
+async function loadScript(src,version){return new Promise((resolve,reject)=>{if([...document.scripts].some(s=>s.src.includes('/'+src)))return resolve();const s=document.createElement('script');s.src=src+'?v='+(version||'10.0.0-rc1');s.onload=resolve;s.onerror=()=>reject(Error('Impossibile caricare '+src));document.body.appendChild(s)})}
+async function loadAppScripts(){app.innerHTML='';const fallback=['app-1.js','app-2.js','app-3.js','app-4.js','app-5.js','app-6.js'];const modules=Array.isArray(window.PTPRO_APP_MODULES)&&window.PTPRO_APP_MODULES.length?window.PTPRO_APP_MODULES:fallback.map(src=>({src}));for(const m of modules)await loadScript(m.src,window.PTPRO_APP_VERSION||'10.0.0-rc1');document.documentElement.dataset.ptproModules=String(modules.length);window.dispatchEvent(new CustomEvent('ptpro:modules-ready',{detail:modules}))}
+function renderLogin(error=''){renderCard(`<h1 style="margin:0 0 8px">Bentornato</h1><p style="color:#91a0b7;margin:0 0 18px">Accedi a PT-PRO 10 Cloud.</p>${error?`<div style="margin:12px 0;padding:12px;border-radius:13px;background:#3a2332;border:1px solid #8b465d;color:#ff7894">${esc(error)}</div>`:''}<form id="cloudLoginForm"><label style="display:grid;gap:7px;margin:13px 0"><span style="font-size:12px;font-weight:800;color:#a9b8cf">Email</span><input id="cloudEmail" type="email" autocomplete="username" required style="width:100%;background:#182233;color:#f5f7fb;border:1px solid #2a3850;border-radius:14px;padding:14px;outline:none"></label><label style="display:grid;gap:7px;margin:13px 0"><span style="font-size:12px;font-weight:800;color:#a9b8cf">Password</span><input id="cloudPassword" type="password" autocomplete="current-password" required style="width:100%;background:#182233;color:#f5f7fb;border:1px solid #2a3850;border-radius:14px;padding:14px;outline:none"></label><button id="cloudLoginBtn" type="submit" style="width:100%;margin-top:9px;border:0;border-radius:14px;padding:13px;font-weight:850;background:linear-gradient(135deg,#7657ff,#4f7eff);color:#fff;cursor:pointer">Accedi</button></form><p style="font-size:12px;color:#91a0b7;margin-top:14px">Connessione Supabase gestita automaticamente da Vercel.</p>`);document.getElementById('cloudLoginForm').onsubmit=async e=>{e.preventDefault();const btn=document.getElementById('cloudLoginBtn');btn.disabled=true;btn.textContent='Accesso…';try{const cfg=loadConfig(),res=await fetch(`${cfg.url}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('cloudEmail').value,password:document.getElementById('cloudPassword').value})}),data=await res.json();if(!res.ok)throw Error(data?.msg||data?.message||data?.error_description||'Accesso non riuscito');localStorage.setItem(SESSION_KEY,JSON.stringify(data));renderLoading('Accesso riuscito. Carico PT-PRO…');await loadAppScripts()}catch(err){renderLogin(err.message)}}}
+async function boot(){renderLoading();try{const cfg=await fetchRuntimeConfig(),session=await validateOrRefresh(cfg,loadSession());if(!session){localStorage.removeItem(SESSION_KEY);renderLogin();return}await loadAppScripts()}catch(err){renderError(err.message)}}
+boot();
 })();

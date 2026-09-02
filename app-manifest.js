@@ -7,6 +7,7 @@
     {id:'v11-wellness-engine',src:'v10/wellness-engine.js',domain:'wellness-engine'},
     {id:'v11-wellness',src:'v10/wellness.js',domain:'wellness'},
     {id:'v11-wellness-runtime',src:'v10/wellness-runtime.js',domain:'wellness-runtime'},
+    {id:'v11-admin-runtime',src:'v10/admin-runtime.js',domain:'admin-runtime'},
     {id:'v10-home',src:'v10/home.js',domain:'home'},
     {id:'v10-workout',src:'v10/workout.js',domain:'workout'},
     {id:'v10-progress',src:'v10/progress.js',domain:'progress'},

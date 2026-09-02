@@ -3,10 +3,10 @@ const need=['index.html','app-manifest.js','auth-gate.js','v10/api.js','v10/nutr
 for(const f of need){if(!fs.existsSync(f))throw new Error(`Missing ${f}`)}
 const index=fs.readFileSync('index.html','utf8');
 for(const css of ['/v10/styles.css','/v10/features.css','/v10/pro.css','/v10/layout.css'])if(!index.includes(css))throw new Error(`Missing style ${css}`);
-if(!index.includes('11.1.1-wellness-school-cloud'))throw new Error('PT-PRO 11.1.1 cache release missing');
+if(!index.includes('11.1.2-wellness-school-cloud'))throw new Error('PT-PRO 11.1.2 cache release missing');
 const manifest=fs.readFileSync('app-manifest.js','utf8');
 for(const f of ['v10/api.js','v10/kernel.js','v10/wellness-engine.js','v10/sport-library.js','v10/sport-library-walking.js','v10/wellness.js','v10/wellness-runtime.js','v10/admin-runtime.js','v10/school.js','v10/school-cloud-runtime.js','v10/home.js','v10/workout.js','v10/progress.js','v10/nutrition.js','v10/reports-sport-runtime.js','v10/coach-engine.js','v10/coach-sport-runtime.js','v10/support.js','v10/bootstrap.js'])if(!manifest.includes(f))throw new Error(`Manifest missing ${f}`);
-if(!manifest.includes('11.1.1-WELLNESS-SCHOOL-CLOUD'))throw new Error('PT-PRO 11.1.1 release missing');
+if(!manifest.includes('11.1.2-WELLNESS-SCHOOL-CLOUD'))throw new Error('PT-PRO 11.1.2 release missing');
 const kernel=fs.readFileSync('v10/kernel.js','utf8');
 for(const token of ["['wellness','✨','Attività & Sport']","['onboarding','◎','Il mio percorso']","['school','🎓','Area Docenti']","['school-register','▤','Registro Cloud']","['school','🎓','Scuola']","['admin-users','♛','Utenti & Attività']","['guide','?','Guida & Tutorial']", "title!=='AMMINISTRAZIONE'||role==='admin'"])if(!kernel.includes(token))throw new Error(`Navigation missing ${token}`);
 const auth=fs.readFileSync('auth-gate.js','utf8');
@@ -24,6 +24,7 @@ for(const token of ['PTPROWellnessEngine','PTPROSportLibrary','E.safeguards','re
 if(wr.includes("active:'eq.true'},{active:false,status:'archived'"))throw new Error('Multi-program support regressed: previous program is still auto-archived');
 const home=fs.readFileSync('v10/home.js','utf8');
 for(const token of ['wellness_programs','activity_logs','Le mie attività','data-sport-program','Passa da una scheda all’altra'])if(!home.includes(token))throw new Error(`Home multi-sport missing ${token}`);
+if(!home.includes("if(!state.boot){A.loading('Ricarico i dati Cloud…');await A.refresh()}"))throw new Error('Home bootstrap recovery missing');
 const progress=fs.readFileSync('v10/progress.js','utf8');
 for(const token of ['Centro Progressi PRO','activity_logs',"['sport','Sport']",'Attività praticate','Storico sport'])if(!progress.includes(token))throw new Error(`Sport progress missing ${token}`);
 const school=fs.readFileSync('v10/school.js','utf8');
@@ -56,4 +57,4 @@ const nutrition=fs.readFileSync('v10/nutrition.js','utf8');
 for(const token of ['Nutrizione PRO','Settimana','Mese','Ricette','Dispensa','Lista spesa','Integratori'])if(!nutrition.includes(token))throw new Error(`Nutrition missing ${token}`);
 const coach=fs.readFileSync('v10/coach-engine.js','utf8');
 for(const token of ['Smart Coach PRO 4.0','groupedSessions','recovery','confidence'])if(!coach.includes(token))throw new Error(`Smart Coach missing ${token}`);
-console.log('PT-PRO 11.1.1 Wellness, Sport & School Cloud smoke: OK');
+console.log('PT-PRO 11.1.2 Wellness, Sport & School Cloud smoke: OK');

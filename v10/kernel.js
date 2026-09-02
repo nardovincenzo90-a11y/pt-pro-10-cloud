@@ -20,7 +20,7 @@ function loading(t='Caricamento…'){app.innerHTML=`${criticalLayout()}<div clas
 function failure(e){console.error(e);shell(`<div class="card"><h2>Errore</h2><div class="error">${esc(e?.message||e)}</div><button class="btn secondary" data-route="home">Torna alla Home</button></div>`)}
 function register(name,fn){routes.set(name,fn)}
 async function go(name,...args){state.view=name;const fn=routes.get(name);if(!fn){toast('Sezione non disponibile','err');return}try{await fn(...args)}catch(e){failure(e)}}
-async function refresh(){state.boot=await api.bootstrap();return state.boot}
+async function refresh(){const boot=await api.bootstrap();if(!boot||typeof boot!=='object')throw Error('Dati Cloud non disponibili. Riprova.');state.boot=boot;return state.boot}
 async function start(){loading('Avvio PT-PRO 11…');try{await refresh();await go('home')}catch(e){failure(e)}}
 function readiness(){const c=state.boot?.checkins?.[0]||{};if(Number.isFinite(Number(c.recovery_score)))return Math.round(Number(c.recovery_score));const vals=[c.sleep,c.energy,c.motivation,c.stress!=null?10-Number(c.stress):null,c.doms!=null?10-Number(c.doms):null].map(Number).filter(Number.isFinite);return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10):70}
 function smartAdvice(r){return r<50?['Scarico consigliato','Riduci volume 30–40%, evita il cedimento e cura il recupero.']:r<65?['Fatica moderata','Mantieni margine tecnico e riduci leggermente volume o intensità.']:r>82?['Pronto a progredire','Recupero alto: puoi cercare una piccola progressione mantenendo tecnica pulita.']:['Programmazione regolare','Prosegui come previsto e usa il RIR per autoregolarti.']}

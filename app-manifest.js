@@ -28,5 +28,5 @@
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.1.1-WELLNESS-SCHOOL-CLOUD';
+  window.PTPRO_APP_VERSION='11.1.2-WELLNESS-SCHOOL-CLOUD';
 })();

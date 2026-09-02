@@ -18,6 +18,7 @@
     {id:'v11-school',src:'v10/school.js',domain:'school'},
     {id:'v11-school-cloud',src:'v10/school-cloud-runtime.js',domain:'school-cloud'},
     {id:'v13-school-pro',src:'v10/school-pro.js',domain:'school-pro'},
+    {id:'v14-school-academy-library',src:'v10/school-academy-library.js',domain:'school-academy-library'},
     {id:'v10-home',src:'v10/home.js',domain:'home'},
     {id:'v10-workout',src:'v10/workout.js',domain:'workout'},
     {id:'v10-progress',src:'v10/progress.js',domain:'progress'},
@@ -36,7 +37,8 @@
     {id:'v13-catalog-runtime',src:'v10/catalog-runtime.js',domain:'catalog-runtime'},
     {id:'v13-nutrition-session',src:'v10/nutrition-session-pro.js',domain:'nutrition-session'},
     {id:'v13-school-tools',src:'v10/school-tools-runtime.js',domain:'school-tools'},
+    {id:'v14-school-academy',src:'v10/school-academy-runtime.js',domain:'school-academy'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.3.2-PRO-DIRECT-GENERATION-SCHOOL';
+  window.PTPRO_APP_VERSION='11.4.0-PRO-SCHOOL-ACADEMY';
 })();

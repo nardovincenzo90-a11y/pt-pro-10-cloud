@@ -1,0 +1,10 @@
+import fs from 'node:fs';import vm from 'node:vm';
+const code=fs.readFileSync('v10/school-academy-library.js','utf8'),ctx={window:{}};vm.createContext(ctx);vm.runInContext(code,ctx);const x=ctx.window.PTPROSchoolAcademy;
+if(!x)throw Error('Academy library non caricata');
+if(x.topics.length<14)throw Error(`Aree insufficienti: ${x.topics.length}`);
+if(x.lessons.length<110)throw Error(`Lezioni insufficienti: ${x.lessons.length}`);
+if(x.uda.length<50)throw Error(`UDA insufficienti: ${x.uda.length}`);
+if(x.questions.length<160)throw Error(`Domande insufficienti: ${x.questions.length}`);
+for(const id of ['cellula','neuroni','muscoli','coordinative','condizionali','alimentazione','postura','paramorfismi'])if(!x.topics.some(t=>t.id===id))throw Error(`Materia mancante: ${id}`);
+for(const l of x.lessons)for(const k of ['objectives','phases','inclusion','assessment'])if(!l[k]?.length)throw Error(`Lezione incompleta ${l.id}: ${k}`);
+console.log(`School Academy OK: ${x.topics.length} aree, ${x.lessons.length} lezioni, ${x.uda.length} UDA, ${x.questions.length} domande`);

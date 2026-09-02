@@ -36,5 +36,5 @@
     {id:'v13-catalog-runtime',src:'v10/catalog-runtime.js',domain:'catalog-runtime'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.3.0-PRO-UNIVERSAL-CATALOG';
+  window.PTPRO_APP_VERSION='11.3.1-PRO-WELLNESS-PHOTO-GUIDES';
 })();

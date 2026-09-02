@@ -8,4 +8,6 @@ if(n.recipes.length<80||n.recipes.length>120)throw Error(`Numero ricette non val
 for(const key of ['steps','errors','breathing','level','muscle_group','equipment','alternatives','image_url'])if(c.exercises.some(x=>!x[key]||(Array.isArray(x[key])&&!x[key].length)))throw Error(`Campo esercizio mancante: ${key}`);
 if(n.foods.some(x=>!x.portion_g||!Array.isArray(x.allergens)))throw Error('Porzioni o allergeni mancanti');
 const school=fs.readFileSync('v10/school-pro.js','utf8');for(const token of ['Protocollo passo-passo','Errori comuni','Sicurezza','Valutazione','Genera lezione completa'])if(!school.includes(token))throw Error(`Scuola PRO incompleta: ${token}`);
+const runtime=fs.readFileSync('v10/catalog-runtime.js','utf8');for(const token of ['catWellness','addToWellness','wellness_program_items','Aggiungi al programma Wellness'])if(!runtime.includes(token))throw Error(`Integrazione Wellness incompleta: ${token}`);
+if(!fs.existsSync('assets/exercise-guides/athletic-tests-photo-atlas.webp')||!school.includes('athletic-tests-photo-atlas.webp'))throw Error('Atlante fotografico test atletici mancante');
 console.log(`Catalogo PRO OK: ${c.exercises.length} esercizi, ${n.foods.length} alimenti, ${n.recipes.length} ricette`);

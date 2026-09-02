@@ -4,7 +4,7 @@ for(const f of files)if(!fs.existsSync(f))throw new Error('Missing '+f);
 const all=files.map(f=>fs.readFileSync(f,'utf8')).join('\n');
 const contracts={
  auth:['/auth/v1/token','ptpro10_session','PTPRO_APP_MODULES'],
- workout:['api_startSession','api_saveSet','api_finishSession'],
+ workout:['api_startWorkout','api_saveSet','api_finishWorkout'],
  smartCoach:['api_getSmartPrescription9','weekly_checkins','workout_sessions','Prontezza e fatica'],
  progress:['measurements','goals','v_exercise_prs','progress_photos'],
  nutrition:['nutrition_plans','recipes','pantry_stock','shopping_lists','supplements','api_generateNutritionSmartMonth','protein_g_target','nutrition_days','meal_items','api_saveNutritionSmartDay'],

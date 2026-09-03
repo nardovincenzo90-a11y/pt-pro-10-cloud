@@ -1,6 +1,6 @@
 {
   "name": "pt-pro-10-cloud",
-  "version": "11.5.2-pro-school-cloud-sync",
+  "version": "11.5.3-pro-school-sync-verify",
   "private": true,
   "scripts": {
     "check": "node --check app-manifest.js && node --check auth-gate.js && node --check v10/nutrition-session-pro.js && node --check v10/school-tools-runtime.js && node --check v10/api.js && node --check v10/nutrition-library.js && node --check v10/nutrition-engine.js && node --check v10/kernel.js && node --check v10/wellness-engine.js && node --check v10/sport-library.js && node --check v10/sport-library-walking.js && node --check v10/universal-catalog.js && node --check v10/exercise-guide-library.js && node --check v10/exercise-guides.js && node --check v10/catalog-runtime.js && node --check v10/wellness.js && node --check v10/onboarding-pro.js && node --check v10/wellness-runtime.js && node --check v10/admin-runtime.js && node --check v10/school.js && node --check v10/school-pro.js && node --check v10/school-cloud-runtime.js && node --check v10/home.js && node --check v10/workout.js && node --check v10/progress.js && node --check v10/nutrition.js && node --check v10/more.js && node --check v10/pro.js && node --check v10/reports-sport-runtime.js && node --check v10/pro-advanced.js && node --check v10/admin-pro.js && node --check v10/admin-catalog.js && node --check v10/coach-engine.js && node --check v10/coach-sport-runtime.js && node --check v10/appearance-pro.js && node --check v10/support.js && node --check v10/final-runtime.js && node --check v10/bootstrap.js && node --check api/config.js",

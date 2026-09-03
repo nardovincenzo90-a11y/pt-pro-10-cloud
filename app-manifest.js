@@ -29,7 +29,7 @@
     {id:'v10-admin-pro',src:'v10/admin-pro.js',domain:'data-manager'},
     {id:'v13-admin-catalog',src:'v10/admin-catalog.js',domain:'admin-catalog'},
     {id:'v11-coach-sport-runtime',src:'v10/coach-sport-runtime.js',domain:'smart-coach-sport'},
-    {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
+    {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'lifecycle'},
     {id:'v10-support',src:'v10/support.js',domain:'support'},
     {id:'v17-sidebar-collapse',src:'v10/sidebar-collapse.js',domain:'shell-enhancement'},
     {id:'v17-wellness-manager',src:'v10/wellness-manager.js',domain:'shell-enhancement'},
@@ -46,5 +46,5 @@
     {id:'v22-platform-pro',src:'v10/platform-pro.js',domain:'platform-pro'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='12.0.0-PRO-COMPLETE-SUITE';
+  window.PTPRO_APP_VERSION='12.0.1-PRO-APPEARANCE-FIX';
 })();

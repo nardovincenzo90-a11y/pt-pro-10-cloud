@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const manifest=fs.readFileSync('app-manifest.js','utf8');
+const modern=fs.readFileSync('v10/appearance-pro.js','utf8');
+const css=fs.readFileSync('v10/appearance-fix.css','utf8');
+const index=fs.readFileSync('index.html','utf8');
+if(!manifest.includes("src:'v10/appearance-pro.js',domain:'lifecycle'"))throw Error('Aspetto PRO non ha un ordine di caricamento deterministico');
+for(const token of ["register('appearance',",'data-accent','Colore principale','mobileMenuOpen'])if(!modern.includes(token))throw Error(`Aspetto incompleto: ${token}`);
+if(!css.includes('.appearancePanel .accentDots')||!css.includes('grid-template-columns:repeat(3'))throw Error('Layout mobile Aspetto non compatto');
+if(!index.includes('/v10/appearance-fix.css'))throw Error('Correzione Aspetto non caricata');
+console.log('Aspetto regression OK: rotta PRO deterministica, colori e navigazione ripristinati');

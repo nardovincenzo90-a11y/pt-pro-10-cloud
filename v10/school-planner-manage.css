@@ -1,0 +1,1 @@
+.plannerManage{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.plannerMiniAction{border:0;background:transparent;color:var(--muted);font-size:19px;cursor:pointer;padding:5px}.plannerMiniAction:hover{color:var(--accent)}

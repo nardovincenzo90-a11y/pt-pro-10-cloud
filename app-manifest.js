@@ -15,8 +15,6 @@
     {id:'v13-onboarding-pro',src:'v10/onboarding-pro.js',domain:'onboarding'},
     {id:'v11-wellness-runtime',src:'v10/wellness-runtime.js',domain:'wellness-runtime'},
     {id:'v11-admin-runtime',src:'v10/admin-runtime.js',domain:'admin-runtime'},
-    {id:'v11-school',src:'v10/school.js',domain:'school'},
-    {id:'v11-school-cloud',src:'v10/school-cloud-runtime.js',domain:'school-cloud'},
     {id:'v13-school-pro',src:'v10/school-pro.js',domain:'school-pro'},
     {id:'v14-school-academy-library',src:'v10/school-academy-library.js',domain:'school-academy-library'},
     {id:'v15-school-planner-library',src:'v10/school-planner-library.js',domain:'school-planner-library'},
@@ -30,7 +28,6 @@
     {id:'v10-pro-advanced',src:'v10/pro-advanced.js',domain:'pro-evolution'},
     {id:'v10-admin-pro',src:'v10/admin-pro.js',domain:'data-manager'},
     {id:'v13-admin-catalog',src:'v10/admin-catalog.js',domain:'admin-catalog'},
-    {id:'v10-coach-engine',src:'v10/coach-engine.js',domain:'smart-coach'},
     {id:'v11-coach-sport-runtime',src:'v10/coach-sport-runtime.js',domain:'smart-coach-sport'},
     {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
     {id:'v10-support',src:'v10/support.js',domain:'support'},
@@ -42,5 +39,5 @@
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.6.0-PRO-SCHOOL-LESSON-TRACKING';
+  window.PTPRO_APP_VERSION='11.7.0-PRO-QUALITY-FOUNDATION';
 })();

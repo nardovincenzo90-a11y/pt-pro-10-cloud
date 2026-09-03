@@ -41,5 +41,5 @@
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.8.0-PRO-WELLNESS-SCHOOL-RELIABILITY';
+  window.PTPRO_APP_VERSION='11.8.1-PRO-SCHOOL-BULK-SAVE';
 })();

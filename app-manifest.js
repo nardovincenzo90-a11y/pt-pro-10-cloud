@@ -31,6 +31,8 @@
     {id:'v11-coach-sport-runtime',src:'v10/coach-sport-runtime.js',domain:'smart-coach-sport'},
     {id:'v10-appearance-pro',src:'v10/appearance-pro.js',domain:'appearance'},
     {id:'v10-support',src:'v10/support.js',domain:'support'},
+    {id:'v17-sidebar-collapse',src:'v10/sidebar-collapse.js',domain:'shell-enhancement'},
+    {id:'v17-wellness-manager',src:'v10/wellness-manager.js',domain:'shell-enhancement'},
     {id:'v10-final-runtime',src:'v10/final-runtime.js',domain:'lifecycle'},
     {id:'v13-catalog-runtime',src:'v10/catalog-runtime.js',domain:'catalog-runtime'},
     {id:'v13-nutrition-session',src:'v10/nutrition-session-pro.js',domain:'nutrition-session'},
@@ -39,5 +41,5 @@
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.7.1-PRO-DESKTOP-NAV';
+  window.PTPRO_APP_VERSION='11.8.0-PRO-WELLNESS-SCHOOL-RELIABILITY';
 })();

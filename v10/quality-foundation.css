@@ -2,6 +2,9 @@
 .plannerSyncBar small{line-height:1.45}
 .plannerRoster label:focus-within,.plannerRecommendations article:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 .toast.err{max-width:min(680px,calc(100vw - 32px));line-height:1.45;overflow-wrap:anywhere}
-@media(min-width:981px){.bottom{display:grid!important}}
+.desktopSidebarToggle{display:none;position:fixed;z-index:120;top:28px;left:218px;width:42px;height:42px;border:1px solid var(--line);border-radius:13px;background:var(--panel);color:var(--text);box-shadow:var(--shadow);font-size:24px;line-height:1;cursor:pointer;transition:left .22s ease,transform .22s ease}
+.desktopSidebarToggle:hover{transform:translateY(-1px);border-color:var(--accent)}
+@media(min-width:1021px){.bottom{display:grid!important}.desktopSidebarToggle{display:grid;place-items:center}html[data-sidebar-collapsed="true"] .appFrame{grid-template-columns:0 minmax(0,1fr);gap:0}html[data-sidebar-collapsed="true"] .sidebar{transform:translateX(calc(-100% - 32px));opacity:0;pointer-events:none}html[data-sidebar-collapsed="true"] .desktopSidebarToggle{left:18px}html[data-sidebar-collapsed="true"] .appFrame>.app{padding-left:56px}.sidebar{transition:transform .22s ease,opacity .18s ease}.appFrame{transition:grid-template-columns .22s ease,gap .22s ease}}
+@media(max-width:1020px){.desktopSidebarToggle{display:none!important}}
 @media(max-width:640px){.sectionHead{align-items:flex-start}.plannerHeadActions{width:100%}.plannerHeadActions .btn{flex:1}.plannerSyncBar{align-items:stretch;flex-direction:column}.plannerSyncBar .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

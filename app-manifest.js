@@ -44,7 +44,8 @@
     {id:'v18-intelligence',src:'v10/intelligence-runtime.js',domain:'intelligence'},
     {id:'v21-ai-center',src:'v10/ai-center-pro.js',domain:'ai-center'},
     {id:'v22-platform-pro',src:'v10/platform-pro.js',domain:'platform-pro'},
+    {id:'v23-visual-polish',src:'v10/visual-polish.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='12.0.1-PRO-APPEARANCE-FIX';
+  window.PTPRO_APP_VERSION='12.1.0-PRO-VISUAL-POLISH';
 })();

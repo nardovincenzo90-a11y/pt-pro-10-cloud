@@ -40,8 +40,11 @@
     {id:'v14-school-academy',src:'v10/school-academy-runtime.js',domain:'school-academy'},
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v19-school-command',src:'v10/school-command-center.js',domain:'school-command'},
+    {id:'v20-role-home',src:'v10/home-role-runtime.js',domain:'role-home'},
     {id:'v18-intelligence',src:'v10/intelligence-runtime.js',domain:'intelligence'},
+    {id:'v21-ai-center',src:'v10/ai-center-pro.js',domain:'ai-center'},
+    {id:'v22-platform-pro',src:'v10/platform-pro.js',domain:'platform-pro'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.12.0-PRO-SCHOOL-COMMAND';
+  window.PTPRO_APP_VERSION='12.0.0-PRO-COMPLETE-SUITE';
 })();

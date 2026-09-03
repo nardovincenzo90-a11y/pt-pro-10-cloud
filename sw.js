@@ -1,4 +1,4 @@
-const CACHE='ptpro11-shell-v28';
+const CACHE='ptpro11-shell-v29';
 const SHELL=['/','/index.html','/styles.css','/auth-gate.js','/ui-fixes.js','/cloud-evolution.js','/manifest.webmanifest','/ptpro-icon.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -39,7 +39,8 @@
     {id:'v13-school-tools',src:'v10/school-tools-runtime.js',domain:'school-tools'},
     {id:'v14-school-academy',src:'v10/school-academy-runtime.js',domain:'school-academy'},
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
+    {id:'v18-intelligence',src:'v10/intelligence-runtime.js',domain:'intelligence'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.8.3-PRO-AUTH-CONFIRMATION';
+  window.PTPRO_APP_VERSION='11.9.0-PRO-INTELLIGENCE-AUTOMATIONS';
 })();

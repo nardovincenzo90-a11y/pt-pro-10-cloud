@@ -42,5 +42,5 @@
     {id:'v15-school-planner',src:'v10/school-planner-runtime.js',domain:'school-planner'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.5.4-PRO-SCHOOL-ADAPTIVE-CLOUD';
+  window.PTPRO_APP_VERSION='11.5.5-PRO-SCHOOL-CLOUD-UPSERT';
 })();

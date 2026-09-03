@@ -42,5 +42,5 @@
     {id:'v18-intelligence',src:'v10/intelligence-runtime.js',domain:'intelligence'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='11.9.0-PRO-INTELLIGENCE-AUTOMATIONS';
+  window.PTPRO_APP_VERSION='11.10.0-PRO-SPORT-PERIODIZATION';
 })();

@@ -48,5 +48,5 @@
     {id:'v24-training-cycles',src:'v10/training-cycles.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='12.3.0-PRO-ANNUAL-PROGRAM';
+  window.PTPRO_APP_VERSION='12.4.0-PRO-WEEKLY-CHECKIN';
 })();

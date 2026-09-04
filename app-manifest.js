@@ -48,5 +48,5 @@
     {id:'v24-training-cycles',src:'v10/training-cycles.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='12.2.0-PRO-TRAINING-CYCLES';
+  window.PTPRO_APP_VERSION='12.2.1-PRO-TRAINING-CYCLES-MOBILE';
 })();

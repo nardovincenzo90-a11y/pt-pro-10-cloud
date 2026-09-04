@@ -45,7 +45,8 @@
     {id:'v21-ai-center',src:'v10/ai-center-pro.js',domain:'ai-center'},
     {id:'v22-platform-pro',src:'v10/platform-pro.js',domain:'platform-pro'},
     {id:'v23-visual-polish',src:'v10/visual-polish.js',domain:'lifecycle'},
+    {id:'v24-training-cycles',src:'v10/training-cycles.js',domain:'lifecycle'},
     {id:'v10-bootstrap',src:'v10/bootstrap.js',domain:'bootstrap'}
   ];
-  window.PTPRO_APP_VERSION='12.1.0-PRO-VISUAL-POLISH';
+  window.PTPRO_APP_VERSION='12.2.0-PRO-TRAINING-CYCLES';
 })();

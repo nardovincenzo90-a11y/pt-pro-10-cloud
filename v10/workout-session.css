@@ -1,0 +1,16 @@
+.activeWorkout{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  border-color:color-mix(in srgb,var(--green) 45%,var(--line));
+  background:linear-gradient(135deg,color-mix(in srgb,var(--green) 9%,var(--panel)),var(--panel));
+}
+.activeWorkout>div{display:grid;gap:4px;min-width:0}
+.activeWorkout h2{margin:0;font-size:20px}
+.activeWorkout .muted{display:block;font-size:11px}
+@media(max-width:600px){
+  .activeWorkout{align-items:stretch;flex-direction:column;padding:15px}
+  .activeWorkout .btn{width:100%}
+}

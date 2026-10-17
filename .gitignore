@@ -1,0 +1,6 @@
+native/PTPROSmartWatch/Config/Secrets.xcconfig
+native/PTPROSmartWatch/PTPROSmartWatch.xcodeproj/
+native/PTPROSmartWatch/.build/
+**/xcuserdata/
+**/.DS_Store
+

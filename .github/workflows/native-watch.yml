@@ -1,0 +1,48 @@
+name: PT-PRO Smart Watch
+
+on:
+  push:
+    branches: [feature/pt-pro-smart-watch]
+    paths:
+      - "native/PTPROSmartWatch/**"
+      - "supabase/PT-PRO_12_SMART_WATCH_FOUNDATION.sql"
+      - ".github/workflows/native-watch.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "native/PTPROSmartWatch/**"
+      - "supabase/PT-PRO_12_SMART_WATCH_FOUNDATION.sql"
+
+jobs:
+  core-tests:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: native/PTPROSmartWatch/Packages/PTPROCore
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+
+  native-build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: native/PTPROSmartWatch
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare non-secret CI configuration
+        run: cp Config/Secrets.xcconfig.example Config/Secrets.xcconfig
+      - name: Generate project
+        run: xcodegen generate
+      - name: Build iPhone and Apple Watch targets
+        run: >-
+          xcodebuild
+          -project PTPROSmartWatch.xcodeproj
+          -scheme PTPRO
+          -configuration Debug
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          build
+

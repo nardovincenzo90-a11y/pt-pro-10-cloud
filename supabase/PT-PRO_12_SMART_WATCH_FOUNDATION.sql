@@ -100,8 +100,22 @@ create unique index if not exists uq_workout_sets_client_event
 
 create index if not exists idx_watch_events_athlete_time
   on public.workout_sync_events(athlete_id, occurred_at desc);
+create index if not exists idx_watch_events_device
+  on public.workout_sync_events(device_id) where device_id is not null;
+create index if not exists idx_watch_events_session
+  on public.workout_sync_events(session_id) where session_id is not null;
 create index if not exists idx_watch_motion_session
   on public.workout_motion_estimates(session_id, measured_at);
+create index if not exists idx_watch_health_session
+  on public.workout_health_summaries(session_id);
+create index if not exists idx_watch_health_device
+  on public.workout_health_summaries(source_device_id) where source_device_id is not null;
+create index if not exists idx_watch_motion_set
+  on public.workout_motion_estimates(workout_set_id) where workout_set_id is not null;
+create index if not exists idx_watch_motion_exercise
+  on public.workout_motion_estimates(exercise_id) where exercise_id is not null;
+create index if not exists idx_watch_motion_device
+  on public.workout_motion_estimates(source_device_id) where source_device_id is not null;
 
 alter table public.connected_devices enable row level security;
 alter table public.workout_sync_events enable row level security;
@@ -115,18 +129,18 @@ drop policy if exists connected_devices_delete on public.connected_devices;
 create policy connected_devices_select on public.connected_devices for select to authenticated
   using (public.can_access_athlete(athlete_id));
 create policy connected_devices_insert on public.connected_devices for insert to authenticated
-  with check (athlete_id = auth.uid());
+  with check (athlete_id = (select auth.uid()));
 create policy connected_devices_update on public.connected_devices for update to authenticated
-  using (athlete_id = auth.uid()) with check (athlete_id = auth.uid());
+  using (athlete_id = (select auth.uid())) with check (athlete_id = (select auth.uid()));
 create policy connected_devices_delete on public.connected_devices for delete to authenticated
-  using (athlete_id = auth.uid());
+  using (athlete_id = (select auth.uid()));
 
 drop policy if exists workout_sync_events_select on public.workout_sync_events;
 drop policy if exists workout_sync_events_insert on public.workout_sync_events;
 create policy workout_sync_events_select on public.workout_sync_events for select to authenticated
   using (public.can_access_athlete(athlete_id));
 create policy workout_sync_events_insert on public.workout_sync_events for insert to authenticated
-  with check (athlete_id = auth.uid());
+  with check (athlete_id = (select auth.uid()));
 
 drop policy if exists workout_health_summaries_select on public.workout_health_summaries;
 drop policy if exists workout_health_summaries_insert on public.workout_health_summaries;
@@ -134,9 +148,9 @@ drop policy if exists workout_health_summaries_update on public.workout_health_s
 create policy workout_health_summaries_select on public.workout_health_summaries for select to authenticated
   using (public.can_access_athlete(athlete_id));
 create policy workout_health_summaries_insert on public.workout_health_summaries for insert to authenticated
-  with check (athlete_id = auth.uid());
+  with check (athlete_id = (select auth.uid()));
 create policy workout_health_summaries_update on public.workout_health_summaries for update to authenticated
-  using (athlete_id = auth.uid()) with check (athlete_id = auth.uid());
+  using (athlete_id = (select auth.uid())) with check (athlete_id = (select auth.uid()));
 
 drop policy if exists workout_motion_estimates_select on public.workout_motion_estimates;
 drop policy if exists workout_motion_estimates_insert on public.workout_motion_estimates;
@@ -144,9 +158,9 @@ drop policy if exists workout_motion_estimates_update on public.workout_motion_e
 create policy workout_motion_estimates_select on public.workout_motion_estimates for select to authenticated
   using (public.can_access_athlete(athlete_id));
 create policy workout_motion_estimates_insert on public.workout_motion_estimates for insert to authenticated
-  with check (athlete_id = auth.uid());
+  with check (athlete_id = (select auth.uid()));
 create policy workout_motion_estimates_update on public.workout_motion_estimates for update to authenticated
-  using (athlete_id = auth.uid()) with check (athlete_id = auth.uid());
+  using (athlete_id = (select auth.uid())) with check (athlete_id = (select auth.uid()));
 
 grant select, insert, update, delete on public.connected_devices to authenticated;
 grant select, insert on public.workout_sync_events to authenticated;
@@ -260,6 +274,7 @@ begin
         'duration','measured',
         'active_energy','apple_estimated'
       )
+    )
     on conflict (athlete_id, session_id) do update set
       healthkit_workout_uuid = excluded.healthkit_workout_uuid,
       ended_at = excluded.ended_at,
@@ -327,15 +342,11 @@ begin
     'ok', true, 'duplicate', false, 'event_id', p_event_id,
     'workout_set_id', target_set_id
   );
-exception when others then
-  update public.workout_sync_events
-    set status = 'rejected', error_code = sqlstate
-    where event_id = p_event_id and athlete_id = uid;
-  raise;
 end;
 $$;
 
-grant execute on function public.ptpro_ingest_watch_event(uuid,uuid,text,timestamptz,jsonb)
-  to authenticated;
+revoke all on function public.ptpro_ingest_watch_event(uuid,uuid,text,timestamptz,jsonb)
+  from public, anon;
+grant execute on function public.ptpro_ingest_watch_event(uuid,uuid,text,timestamptz,jsonb) to authenticated;
 
 commit;
